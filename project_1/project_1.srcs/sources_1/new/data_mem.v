@@ -10,6 +10,7 @@ always@ (posedge clk)
     begin
         if (we)
             mem[a] <= wd;
-        rd <= mem[a];
+        else
+            rd <= mem[a];
     end
 endmodule

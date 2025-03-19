@@ -1,18 +1,16 @@
-
-*** Running vivado
-    with args -log mips_32.vds -m64 -product Vivado -mode batch -messageDb vivado.pb -notrace -source mips_32.tcl
-
-
-ECHO is off.
-ECHO is off.
-
-****** Vivado v2023.2 (64-bit)
-  **** SW Build 4029153 on Fri Oct 13 20:14:34 MDT 2023
-  **** IP Build 4028589 on Sat Oct 14 00:45:43 MDT 2023
-  **** SharedData Build 4025554 on Tue Oct 10 17:18:54 MDT 2023
-    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
-    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
-
+#-----------------------------------------------------------
+# Vivado v2023.2 (64-bit)
+# SW Build 4029153 on Fri Oct 13 20:14:34 MDT 2023
+# IP Build 4028589 on Sat Oct 14 00:45:43 MDT 2023
+# SharedData Build 4025554 on Tue Oct 10 17:18:54 MDT 2023
+# Start of session at: Wed Mar 19 21:37:28 2025
+# Process ID: 11384
+# Current directory: C:/imp folders/vlog prrojects/project_1/project_1.runs/synth_1
+# Command line: vivado.exe -log mips_32.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source mips_32.tcl
+# Log file: C:/imp folders/vlog prrojects/project_1/project_1.runs/synth_1/mips_32.vds
+# Journal file: C:/imp folders/vlog prrojects/project_1/project_1.runs/synth_1\vivado.jou
+# Running On: DESKTOP-TH2FPTO, OS: Windows, CPU Frequency: 3600 MHz, CPU Physical cores: 4, Host memory: 17119 MB
+#-----------------------------------------------------------
 source mips_32.tcl -notrace
 create_project: Time (s): cpu = 00:00:07 ; elapsed = 00:00:07 . Memory (MB): peak = 469.586 ; gain = 185.215
 Command: read_checkpoint -auto_incremental -incremental {C:/imp folders/vlog prrojects/project_1/project_1.srcs/utils_1/imports/synth_1/alu_behaviour.dcp}
@@ -355,7 +353,6 @@ Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory
 INFO: [Project 1-111] Unisim Transformation Summary:
 No Unisim elements were transformed.
 
-Access is denied.
 Synth Design complete | Checksum: 62c0ca52
 INFO: [Common 17-83] Releasing license: Synthesis
 33 Infos, 98 Warnings, 1 Critical Warnings and 0 Errors encountered.

@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<GenRun Id="synth_1" LaunchPart="xc7k70tfbv676-1" LaunchTime="1741805919" LaunchIncrCheckpoint="$PSRCDIR/utils_1/imports/synth_1/alu_behaviour.dcp">
-  <File Type="PA-TCL" Name="alu_behaviour.tcl"/>
-  <File Type="REPORTS-TCL" Name="alu_behaviour_reports.tcl"/>
-  <File Type="RDS-RDS" Name="alu_behaviour.vds"/>
-  <File Type="RDS-UTIL" Name="alu_behaviour_utilization_synth.rpt"/>
-  <File Type="RDS-UTIL-PB" Name="alu_behaviour_utilization_synth.pb"/>
-  <File Type="RDS-DCP" Name="alu_behaviour.dcp"/>
+<GenRun Id="synth_1" LaunchPart="xc7k70tfbv676-1" LaunchTime="1742400445" LaunchIncrCheckpoint="$PSRCDIR/utils_1/imports/synth_1/alu_behaviour.dcp">
+  <File Type="PA-TCL" Name="mips_32.tcl"/>
+  <File Type="RDS-PROPCONSTRS" Name="mips_32_drc_synth.rpt"/>
+  <File Type="REPORTS-TCL" Name="mips_32_reports.tcl"/>
+  <File Type="RDS-RDS" Name="mips_32.vds"/>
+  <File Type="RDS-UTIL" Name="mips_32_utilization_synth.rpt"/>
+  <File Type="RDS-UTIL-PB" Name="mips_32_utilization_synth.pb"/>
+  <File Type="RDS-DCP" Name="mips_32.dcp"/>
+  <File Type="VDS-TIMINGSUMMARY" Name="mips_32_timing_summary_synth.rpt"/>
+  <File Type="VDS-TIMING-PB" Name="mips_32_timing_summary_synth.pb"/>
   <FileSet Name="sources" Type="DesignSrcs" RelSrcDir="$PSRCDIR/sources_1" RelGenDir="$PGENDIR/sources_1">
     <Filter Type="Srcs"/>
     <File Path="$PSRCDIR/sources_1/new/alu_behaviour.v">
@@ -15,10 +18,65 @@
         <Attr Name="UsedIn" Val="simulation"/>
       </FileInfo>
     </File>
+    <File Path="$PSRCDIR/sources_1/new/data_mem.v">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/new/ins_mem.v">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/new/mux_32.v">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/new/p_mux.v">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/new/prog_counter.v">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/new/reg_file.v">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/new/sign_extend.v">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/new/mips_32.v">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
     <Config>
       <Option Name="DesignMode" Val="RTL"/>
-      <Option Name="TopModule" Val="alu_behaviour"/>
-      <Option Name="TopAutoSet" Val="TRUE"/>
+      <Option Name="TopModule" Val="mips_32"/>
     </Config>
   </FileSet>
   <FileSet Name="constrs_in" Type="Constrs" RelSrcDir="$PSRCDIR/constrs_1" RelGenDir="$PGENDIR/constrs_1">

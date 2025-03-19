@@ -1,0 +1,4 @@
+Running: xsim.dir/mips_32_behav/xsimk.exe -simmode gui -wdb mips_32_behav.wdb -simrunnum 0 -socket 53908
+Design successfully loaded
+Design Loading Memory Usage: 7924 KB (Peak: 7924 KB)
+Design Loading CPU Usage: 0 ms

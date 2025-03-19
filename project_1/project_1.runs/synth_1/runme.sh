@@ -41,4 +41,4 @@ EAStep()
      fi
 }
 
-EAStep vivado -log alu_behaviour.vds -m64 -product Vivado -mode batch -messageDb vivado.pb -notrace -source alu_behaviour.tcl
+EAStep vivado -log mips_32.vds -m64 -product Vivado -mode batch -messageDb vivado.pb -notrace -source mips_32.tcl

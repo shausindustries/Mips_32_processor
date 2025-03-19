@@ -1,0 +1,17 @@
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/imp folders/vlog prrojects/project_1/project_1.srcs/sources_1/new/alu_behaviour.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module alu_behaviour
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/imp folders/vlog prrojects/project_1/project_1.srcs/sources_1/new/data_mem.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module data_mem
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/imp folders/vlog prrojects/project_1/project_1.srcs/sources_1/new/ins_mem.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module ins_mem
+WARNING: [VRFC 10-9277] overflow of 32-bit signed integer 4294967295; using -1 instead [C:/imp folders/vlog prrojects/project_1/project_1.srcs/sources_1/new/ins_mem.v:5]
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/imp folders/vlog prrojects/project_1/project_1.srcs/sources_1/new/prog_counter.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module prog_counter
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/imp folders/vlog prrojects/project_1/project_1.srcs/sources_1/new/reg_file.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module reg_file
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/imp folders/vlog prrojects/project_1/project_1.srcs/sources_1/new/sign_extend.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module sign_extend
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/imp folders/vlog prrojects/project_1/project_1.srcs/sources_1/new/mips_32.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module mips_32
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/imp folders/vlog prrojects/project_1/project_1.sim/sim_1/behav/xsim/glbl.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module glbl
