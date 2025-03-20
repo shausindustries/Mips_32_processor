@@ -2,6 +2,6 @@
 module ins_mem(a,rd);
 input [31:0]a;
 output [31:0]rd;
-reg [31:0] mem [4294967295:0];
+reg [31:0] mem [63:0];
 assign rd = mem[a];
 endmodule
