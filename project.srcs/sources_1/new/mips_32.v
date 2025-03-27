@@ -1,10 +1,11 @@
 `timescale 1ns / 1ps
-module mips_32();
-wire clk,we3,we,sel1,sel2,sel3,j,branch;
+module mips_32(of);
+wire clk,we3,we,sel1,sel2,sel3,j,branch,ofs;
 wire [2:0]op;
 wire [31:0]pc,instr,rdreg1,rdreg2,sim,alres1,alres2,alres3,d_out,m1r,m2r,m3r,m4r,m5r,pro1,pro2;
 wire [4:0]mr;
-wire zf,selm;
+wire zf,selm,t1;
+output of;
 
 assign pro2 = instr[25:0] << 2;
 
@@ -30,13 +31,15 @@ sign_extend se1 (.in(instr[15:0]),.out(sim));
 
 mux_32 m1 (.a(rdreg2),.b(sim),.sel(sel1),.o(m1r));
 
-alu_behaviour a1 (.a(rdreg1),.b(m1r),.op(op),.o(alres1),.zf(zf));
+alu_behaviour a1 (.a(rdreg1),.b(m1r),.op(op),.o(alres1),.zf(zf),.of(t1));
 
-assign selm = zf & branch;
+assign  of = ofs & t1;
+
+assign selm = ((~zf & branch)|(zf & branch));
 
 data_mem dm1 (.clk(clk),.a(alres1),.wd(rdreg2),.rd(d_out),.we(we));
 
 mux_32 m2 (.a(alres1),.b(d_out),.sel(sel2),.o(m2r));
 
-control_unit c1 (.opcode(instr[31:26]),.funct(instr[5:0]),.we(we),.we3(we3),.sel1(sel1),.sel2(sel2),.sel3(sel3),.j(j),.alc(op),.bc(branch));
+control_unit c1 (.opcode(instr[31:26]),.funct(instr[5:0]),.we(we),.we3(we3),.sel1(sel1),.sel2(sel2),.sel3(sel3),.j(j),.alc(op),.bc(branch),.ofs(ofs));
 endmodule

@@ -1,9 +1,9 @@
 `timescale 1ns / 1ps
-module alu_behaviour(a,b,o,op,zf);
+module alu_behaviour(a,b,o,op,zf,of);
 input [31:0]a;
 input [31:0]b;
 input [2:0]op;
-output reg zf;
+output reg zf,of;
 output reg [31:0]o;
 
 always@ (*)
@@ -21,5 +21,11 @@ always@ (*)
     if (o == 32'h00000000)
         zf = 1'b1;
     else
-        zf = 1'b1;
+        zf = 1'b0;
+
+always@ (*)
+    if (o > 32)
+        of = 1'b1;
+    else
+        of = 1'b0;
 endmodule
