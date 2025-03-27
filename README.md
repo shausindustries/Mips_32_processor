@@ -4,9 +4,9 @@ This is a simple implementation of a single cycle MIPS-32 processor using Verilo
 **_Features:_**
 - Supports execution of basic R, I and J type instructions
 - List of instruction till now:
-  *  R-Type: add,sub,and,or
-  *  I-type: lw,sw,addi,subi,ori,andi
-  *  J-type: beq,j
+  *  R-Type: add,sub,and,or,mul
+  *  I-type: lw,sw,addi,subi,ori,andi,addiu
+  *  J-type: beq,j,bne
 
 **_Installation:_**
 - To install it clone the repository.
