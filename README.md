@@ -20,4 +20,4 @@ This is a simple implementation of a single cycle MIPS-32 (i.e 32-bit) processor
 **_Improvements:_**
 - Expand the number of executable instructions like jal,bne etc.
 - Develop the control system for the latter.
-- Develop the mulicycle and pipelined versions of the MIPS-32 processor
+- Develop a pipelined version of the MIPS-32 processor.
