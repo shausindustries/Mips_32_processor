@@ -1,12 +1,14 @@
 **_MIPS-32 Processor:_**
-This is a simple implementation of a single cycle MIPS-32 processor using Verilog and Computer Architecture. MIPS is a subset of the RISC (Reduced Instruction Set Computer).
+MIPS is a subset of the RISC (Reduced Instruction Set Computer) architecture. It is easier to understand and implement as compared to the
+x86 architecture which belongs to the CISC (Complex Instruction Set Computer) architectural family.
+This is a simple implementation of a single cycle MIPS-32 (i.e 32-bit) processor using Verilog and Computer Architecture. 
 
 **_Features:_**
 - Supports execution of basic R, I and J type instructions
 - List of instruction till now:
-  *  R-Type: add,sub,and,or
-  *  I-type: lw,sw,addi,subi,ori,andi
-  *  J-type: beq,j
+  *  R-Type: add,sub,and,or,xor,mul
+  *  I-type: lw,sw,addi,subi,ori,andi,addiu
+  *  J-type: beq,j,bne
 
 **_Installation:_**
 - To install it clone the repository.
@@ -18,4 +20,4 @@ This is a simple implementation of a single cycle MIPS-32 processor using Verilo
 **_Improvements:_**
 - Expand the number of executable instructions like jal,bne etc.
 - Develop the control system for the latter.
-- Develop the mulicycle and pipelined versions of the MIPS-32 processor
+- Develop a pipelined version of the MIPS-32 processor.
