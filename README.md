@@ -22,3 +22,4 @@ In the schematic.pdf, you can see the updated RTL Design of the processor.
 - Expand the number of executable instructions like jal,bne etc.
 - Develop the control system for the latter.
 - Develop a pipelined version of the MIPS-32 processor.
+- Hazard handling.
