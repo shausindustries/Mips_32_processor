@@ -1,9 +1,9 @@
 `timescale 1ns / 1ps
 module mips_32(of,clk);
 input clk;
-wire we3,we,sel1,sel2,sel3,j,branch,ofs;
-wire [2:0]op;
-wire [31:0]pc,instr,rdreg1,rdreg2,sim,alres1,alres2,alres3,d_out,m1r,m2r,m3r,m4r,m5r,pro1,pro2;
+wire we3,we,sel1,sel2,sel3,j,branch,ofs,we3m,wem,sel1m,sel2m,sel3m,branchm;
+wire [2:0]op,opm;
+wire [31:0]pc,instr,rdreg1,rdreg2,sim,alres1,alres2,alres3,d_out,m1r,m2r,m3r,m4r,m5r,pro1,pro2,b301,b302;
 wire [4:0]mr;
 wire zf,selm,t1;
 reg [31:0]ar1; reg [31:0]ar2; reg [31:0]br1; reg [31:0]br2; reg [31:0]br3; reg [31:0]br4; reg [31:0]cr1; reg [31:0]cr2;reg [31:0]cr3; reg [31:0]dr1; reg [31:0]dr2;
@@ -37,7 +37,10 @@ sign_extend se1 (.in(ar1[15:0]),.out(sim));
 
 mux_32 m1 (.a(br2),.b(br3),.sel(br6),.o(m1r));
 
-alu_behaviour a1 (.a(br1),.b(m1r),.op(br5),.o(alres1),.zf(zf),.of(t1));
+bit32x4 b1 (.a(m1r),.b(m2r),.c(cr1),.o(b301));
+bit32x4 b2 (.a(br1),.b(m2r),.c(cr1),.o(b302));
+
+alu_behaviour a1 (.a(br1),.b(b301),.op(br5),.o(alres1),.zf(zf),.of(t1));
 
 assign  of = ofs & t1;
 
@@ -45,9 +48,16 @@ assign selm = ((~zf & cr8)|(zf & cr8));
 
 data_mem dm1 (.clk(clk),.a(cr1),.wd(cr2),.rd(d_out),.we(cr7));
 
-mux_32 m2 (.a(alres1),.b(d_out),.sel(dr5),.o(m2r));
+mux_32 m2 (.a(dr1),.b(dr2),.sel(dr5),.o(m2r));
 
 control_unit c1 (.opcode(instr[31:26]),.funct(instr[5:0]),.we(we),.we3(we3),.sel1(sel1),.sel2(sel2),.sel3(sel3),.j(j),.alc(op),.bc(branch),.ofs(ofs));
+omux o1(.a(we),.o(wem));
+omux o2(.a(we3),.o(we3m));
+omux o3(.a(sel1),.o(sel1m));
+omux o4(.a(sel2),.o(sel2m));
+omux o5(.a(sel3),.o(sel3m));
+omux o6(.a(branch),.o(branchm));
+tmux tm1(.a(op),.o(opm));
 
 always@ (posedge clk)
     begin
@@ -57,13 +67,13 @@ always@ (posedge clk)
         br2 <= rdreg2;
         br3 <= sim;
         br4 <= ar2;
-        br5 <= op;
-        br6 <= sel1;
-        br7 <= sel3;
-        br8 <= we3;
-        br9 <= sel2;
-        br10 <= we;
-        br11 <= branch;
+        br5 <= opm;
+        br6 <= sel1m;
+        br7 <= sel3m;
+        br8 <= we3m;
+        br9 <= sel2m;
+        br10 <= wem;
+        br11 <= branchm;
         cr1 <= alres1;
         cr2 <= br2;
         cr3 <= alres3;
