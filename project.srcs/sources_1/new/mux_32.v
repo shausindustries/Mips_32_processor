@@ -9,6 +9,7 @@ module mux_32(a,b,sel,o);
             case (sel)
                 0 : o = a;
                 1 : o = b;
+                default : o = a;
             endcase
         end
 endmodule           

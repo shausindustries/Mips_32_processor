@@ -5,7 +5,7 @@ wire we3,we,sel1,sel2,sel3,j,branch,ofs,we3m,wem,sel1m,sel2m,sel3m,branchm;
 wire [2:0]op,opm;
 wire [31:0]pc,instr,rdreg1,rdreg2,sim,alres1,alres2,alres3,d_out,m1r,m2r,m3r,m4r,m5r,pro1,pro2,b301,b302;
 wire [4:0]mr;
-wire zf,selm,t1;
+wire zf,selm,t1,fwd1,fwd2;
 reg [31:0]ar1; reg [31:0]ar2; reg [31:0]br1; reg [31:0]br2; reg [31:0]br3; reg [31:0]br4; reg [31:0]cr1; reg [31:0]cr2;reg [31:0]cr3; reg [31:0]dr1; reg [31:0]dr2;
 
 reg [4:0]cr4; reg [4:0]dr3;
@@ -37,27 +37,28 @@ sign_extend se1 (.in(ar1[15:0]),.out(sim));
 
 mux_32 m1 (.a(br2),.b(br3),.sel(br6),.o(m1r));
 
-bit32x4 b1 (.a(m1r),.b(m2r),.c(cr1),.o(b301));
-bit32x4 b2 (.a(br1),.b(m2r),.c(cr1),.o(b302));
+bit32x4 b1 (.a(m1r),.b(m2r),.c(cr1),.sel(fwd1),.o(b301));
+bit32x4 b2 (.a(br1),.b(m2r),.c(cr1),.sel(fwd2),.o(b302));
 
-alu_behaviour a1 (.a(br1),.b(b301),.op(br5),.o(alres1),.zf(zf),.of(t1));
+alu_behaviour a1 (.a(b301),.b(b302),.op(br5),.o(alres1),.zf(zf),.of(t1));
 
 assign  of = ofs & t1;
 
 assign selm = ((~zf & cr8)|(zf & cr8));
 
-data_mem dm1 (.clk(clk),.a(cr1),.wd(cr2),.rd(d_out),.we(cr7));
+data_mem dm1 (.clk(clk),.a(cr1),.wd(m5r),.rd(d_out),.we(cr7));
 
 mux_32 m2 (.a(dr1),.b(dr2),.sel(dr5),.o(m2r));
 
 control_unit c1 (.opcode(instr[31:26]),.funct(instr[5:0]),.we(we),.we3(we3),.sel1(sel1),.sel2(sel2),.sel3(sel3),.j(j),.alc(op),.bc(branch),.ofs(ofs));
-omux o1(.a(we),.o(wem));
-omux o2(.a(we3),.o(we3m));
-omux o3(.a(sel1),.o(sel1m));
-omux o4(.a(sel2),.o(sel2m));
-omux o5(.a(sel3),.o(sel3m));
-omux o6(.a(branch),.o(branchm));
-tmux tm1(.a(op),.o(opm));
+omux o1(.a(we),.b(1'b0),.o(wem));
+omux o2(.a(we3),.b(1'b0),.o(we3m));
+omux o3(.a(sel1),.b(1'b0),.o(sel1m));
+omux o4(.a(sel2),.b(1'b0),.o(sel2m));
+omux o5(.a(sel3),.b(1'b0),.o(sel3m));
+omux o6(.a(branch),.b(1'b0),.o(branchm));
+tmux tm1(.a(op),.b(3'b000),.o(opm));
+mux_32 m5 (.a(cr2),.b(m2r),.sel(),.o(m5r));
 
 always@ (posedge clk)
     begin

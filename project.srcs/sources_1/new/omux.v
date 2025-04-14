@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
-module omux(a,s,o);
-input a,s;
+module omux(a,b,s,o);
+input a,b,s;
 output o;
 
-assign o = s ? a : 1'b0;
+assign o = s ? a : b;
 endmodule
