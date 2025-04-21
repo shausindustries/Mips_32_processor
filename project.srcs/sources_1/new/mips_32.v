@@ -5,10 +5,11 @@ wire we3,we,sel1,sel2,sel3,j,branch,ofs,we3m,wem,sel1m,sel2m,sel3m,branchm;
 wire [2:0]op,opm;
 wire [31:0]pc,instr,rdreg1,rdreg2,sim,alres1,alres2,alres3,d_out,m1r,m2r,m3r,m4r,m5r,pro1,pro2,b301,b302;
 wire [4:0]mr;
-wire zf,selm,t1,fwd1,fwd2;
+wire zf,selm,t1;
+wire [1:0]fwd1,fwd2;
 reg [31:0]ar1; reg [31:0]ar2; reg [31:0]br1; reg [31:0]br2; reg [31:0]br3; reg [31:0]br4; reg [31:0]cr1; reg [31:0]cr2;reg [31:0]cr3; reg [31:0]dr1; reg [31:0]dr2;
 
-reg [4:0]cr4; reg [4:0]dr3;
+reg [4:0]cr4; reg [4:0]dr3; reg [4:0]br12; reg [4:0]br13; reg [4:0]br14;
 reg [1:0]br5;
 reg br6,br7,br8,br9,br10,br11,cr5,cr6,cr7,cr8,dr4,dr5;
 output of;
@@ -29,7 +30,7 @@ mux_32 m4 (.a(m3r),.b({alres2[31:28],pro2}),.sel(j),.o(m4r));
 
 ins_mem im1 (.a(pc),.rd(instr));
 
-p_mux p1 (.a(ar1[20:16]),.b(ar1[15:11]),.sel(br7),.o(mr));
+p_mux p1 (.a(br12),.b(br13),.sel(br7),.o(mr));
 
 reg_file rf1 (.a1(ar1[25:21]),.a2(ar1[20:16]),.a3(dr3),.rd1(rdreg1),.rd2(rdreg2),.wd3(m2r),.clk(~(clk)),.we3(dr4));
 
@@ -60,6 +61,8 @@ omux o6(.a(branch),.b(1'b0),.o(branchm));
 tmux tm1(.a(op),.b(3'b000),.o(opm));
 mux_32 m5 (.a(cr2),.b(m2r),.sel(),.o(m5r));
 
+fwd_unit f1 (.br14(br14),.br12(br12),.fwd1(fwd1),.fwd2(fwd2),.cr5(cr5),.dr4(dr4),.dr3(dr3),.cr4(cr4));
+
 always@ (posedge clk)
     begin
         ar1 <= instr;
@@ -75,6 +78,9 @@ always@ (posedge clk)
         br9 <= sel2m;
         br10 <= wem;
         br11 <= branchm;
+        br12 <= ar1[20:16];
+        br13 <= ar1[15:11];
+        br14 <= ar1[25:21];
         cr1 <= alres1;
         cr2 <= br2;
         cr3 <= alres3;
