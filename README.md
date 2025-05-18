@@ -26,6 +26,6 @@ In the schematic.pdf, you can see the updated RTL Design of the processor.
 - Develop a pipelined version of the MIPS-32 processor.
 - Hazard handling.
 
-**_Sources:_*
+Sources:
 - Digital Design and Computer Architecture
 - Computer Architecture and Design
