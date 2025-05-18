@@ -1,7 +1,7 @@
 **_MIPS-32 Processor:_**
 MIPS is a subset of the RISC (Reduced Instruction Set Computer) architecture. It is easier to understand and implement as compared to the
 x86 architecture which belongs to the CISC (Complex Instruction Set Computer) architectural family.
-This is a simple implementation of a single cycle MIPS-32 (i.e 32-bit) processor using Verilog and Computer Architecture. 
+This is a simple implementation of a single core pipelined MIPS-32 (i.e 32-bit) processor using Verilog and Computer Architecture. 
 In the schematic.pdf, you can see the updated RTL Design of the processor.
 
 **_Features:_**
@@ -25,3 +25,7 @@ In the schematic.pdf, you can see the updated RTL Design of the processor.
 - Develop the control system for the latter.
 - Develop a pipelined version of the MIPS-32 processor.
 - Hazard handling.
+
+**_Sources:_*
+- Digital Design and Computer Architecture
+- Computer Architecture and Design
