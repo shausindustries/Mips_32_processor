@@ -7,6 +7,8 @@ output reg zf,of;
 output reg [31:0]o;
 
 always@ (*)
+begin
+    o = 8'h00000000;
     case (op)
         0 : o = a + b;
         1 : o = a - b;
@@ -17,15 +19,22 @@ always@ (*)
         6 : o = a ^ b;
         7 : o = ~a & ~b;
     endcase
+end
 always@ (*)
+begin
+    zf = 1'b0;
     if (o == 32'h00000000)
         zf = 1'b1;
     else
         zf = 1'b0;
+end
 
 always@ (*)
+begin
+    of = 1'b0;
     if (o > 32)
         of = 1'b1;
     else
         of = 1'b0;
+end
 endmodule
