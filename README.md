@@ -12,6 +12,8 @@ This is a simple implementation of a single core 5-stage pipelined MIPS-32 (i.e 
   *  J-type: beq,j,bne.
 - A control unit has also been implemented.
 - This design now supports Data Hazard handling via Stalling and Forwarding.
+- After the recent commits, the processor was upgraded with a branch not taken logic and 2 bit Dynamic Branch Prediction complete with a Branch Target
+  Buffer.
 
 **_Note:_** Some of the instructions have the same implementation as the ones already implemented (like subu,addu etc), hence they have been eschewed.
 
