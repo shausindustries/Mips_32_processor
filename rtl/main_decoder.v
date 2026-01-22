@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
-module main_decoder(opcode,sel1,sel2,sel3,we,we3,br,op,j,ofs,mrd);
+module main_decoder(opcode,sel1,sel2,sel3,we,we3,bre,brn,op,j,ofs,mrd);
 input [5:0]opcode;
-output reg sel1,sel2,sel3,we,we3,br,j,ofs,mrd;
+output reg sel1,sel2,sel3,we,we3,bre,brn,j,ofs,mrd;
 output reg [2:0]op;
 
 always@ (*)
@@ -11,7 +11,8 @@ sel2 = 1'b0;
 sel3 = 1'b0;
 we = 1'b0;
 we3 = 1'b0;
-br = 1'b0;
+bre = 1'b0;
+brn = 1'b0;
 j = 1'b0;
 ofs = 1'b0;
 op = 3'b000;
@@ -21,7 +22,8 @@ case (opcode)
                 we3 = 1'b1;
                 sel3 = 1'b1;
                 sel1 = 1'b0;
-                br = 1'b0;
+                bre = 1'b0;
+                brn = 1'b0;
                 we = 1'b0;
                 sel2 = 1'b0;
                 op = 3'b010;
@@ -32,7 +34,8 @@ case (opcode)
                 we3 = 1'b0;
                 sel3 = 1'bx;
                 sel1 = 1'bx;
-                br = 1'bx;
+                bre = 1'bx;
+                brn = 1'bx;
                 we = 1'b0;
                 sel2 = 1'bx;
                 op = 3'bxxx;
@@ -43,7 +46,8 @@ case (opcode)
                 we3 = 1'b0;
                 sel3 = 1'bx;
                 sel1 = 1'b0;
-                br = 1'b1;
+                bre = 1'b1;
+                brn = 1'b0;
                 we = 1'b0;
                 sel2 = 1'bx;
                 op = 3'b001;
@@ -54,7 +58,8 @@ case (opcode)
                 we3 = 1'b0;
                 sel3 = 1'bx;
                 sel1 = 1'b0;
-                br = 1'b1;
+                bre = 1'b0;
+                brn = 1'b1;
                 we = 1'b0;
                 sel2 = 1'bx;
                 op = 3'b001;
@@ -65,7 +70,8 @@ case (opcode)
                 we3 = 1'b1;
                 sel3 = 1'b0;
                 sel1 = 1'b1;
-                br = 1'b0;
+                bre = 1'b0;
+                brn = 1'b0;
                 we = 1'b0;
                 sel2 = 1'b0;
                 op = 3'b000;
@@ -76,7 +82,8 @@ case (opcode)
                 we3 = 1'b1;
                 sel3 = 1'b0;
                 sel1 = 1'b1;
-                br = 1'b0;
+                bre = 1'b0;
+                brn = 1'b0;
                 we = 1'b0;
                 sel2 = 1'b0;
                 op = 3'b000;
@@ -87,7 +94,8 @@ case (opcode)
                 we3 = 1'b1;
                 sel3 = 1'b0;
                 sel1 = 1'b1;
-                br = 1'b0;
+                bre = 1'b0;
+                brn = 1'b0;
                 we = 1'b0;
                 sel2 = 1'b0;
                 op = 3'b100;
@@ -98,7 +106,8 @@ case (opcode)
                 we3 = 1'b1;
                 sel3 = 1'b0;
                 sel1 = 1'b1;
-                br = 1'b0;
+                bre = 1'b0;
+                brn = 1'b0;
                 we = 1'b0;
                 sel2 = 1'b0;
                 op = 3'b101;
@@ -109,7 +118,8 @@ case (opcode)
                 we3 = 1'b1;
                 sel3 = 1'b0;
                 sel1 = 1'b1;
-                br = 1'b0;
+                bre = 1'b0;
+                brn = 1'b0;
                 we = 1'b0;
                 sel2 = 1'b0;
                 op = 3'b110;
@@ -120,7 +130,8 @@ case (opcode)
                 we3 = 1'b1;
                 sel3 = 1'b1;
                 sel1 = 1'b0;
-                br = 1'b0;
+                bre = 1'b0;
+                brn = 1'b0;
                 we = 1'b0;
                 sel2 = 1'b0;
                 op = 3'b010;
@@ -131,7 +142,8 @@ case (opcode)
                 we3 = 1'b1;
                 sel3 = 1'b0;
                 sel1 = 1'b1;
-                br = 1'b0;
+                bre = 1'b0;
+                brn = 1'b0;
                 we = 1'b0;
                 sel2 = 1'b1;
                 op = 2'b000;
@@ -143,7 +155,8 @@ case (opcode)
                 we3 = 1'b0;
                 sel3 = 1'bx;
                 sel1 = 1'b1;
-                br = 1'b0;
+                bre = 1'b0;
+                brn = 1'b0;
                 we = 1'b1;
                 sel2 = 1'bx;
                 op = 2'b000;

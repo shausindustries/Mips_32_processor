@@ -1,7 +1,7 @@
 module ex_mem(
     input [31:0]cr1,cr2,cr3,
     input [4:0]cr4,
-    input cr5,cr6,cr7,cr8,
+    input cr5,cr6,cr7,
     input clk,
     output reg [31:0]co1,co2,co3,
     output reg [4:0]co4,
@@ -15,6 +15,5 @@ module ex_mem(
         co5 <= cr5;
         co6 <= cr6;
         co7 <= cr7;
-        co8 <= cr8;
     end
 endmodule
