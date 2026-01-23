@@ -61,7 +61,7 @@ This repository contains the evolutionary stages a MIPS32 processor.
   * Minimum parallelism.
   * Branch delay slot.
 
-_ **_Future Improvements:_**
+- **_Future Improvements:_**
   * Superscalar design.
   * Static and Dynamic Multiple Issue.
   * Deep pipeline.
