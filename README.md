@@ -51,7 +51,7 @@ This repository contains the evolutionary stages a MIPS32 processor.
 - Introduced Dynamic Branch Prediction.
 - Synthesised the RTL design to Logical Design using Yosys and sky130A pdk.
 - Implemented a reset architecture.
-- Simulated and verified stalling, forwarding, dynamic branch prediction, branch not taken behaviour using waveform analysis.
+- Simulated and verified behaviours using waveform analysis.
 
 **_Note:_** You can check the waveform in sim folder.
 
@@ -60,6 +60,8 @@ This repository contains the evolutionary stages a MIPS32 processor.
   * Handles Control Hazards via stalling and branch not taken.
   * Reduces instruction penalty using a Branch History Table.
   * Reliable prediction using a 2-bit Branch Target Buffer.
+  * Verified forwarding, stalling, branch not taken, branch prediction.
+  * Verified in order execution.
 
 - **_Limitation:_**
   * Minimum parallelism.
