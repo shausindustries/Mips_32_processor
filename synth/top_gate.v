@@ -2,7 +2,7 @@
 
 (* top =  1  *)
 (* src = "rtl/top.v:3" *)
-module mips(of, clk);
+module top(of, clk);
   wire _00000_;
   wire _00001_;
   wire _00002_;

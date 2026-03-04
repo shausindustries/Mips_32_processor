@@ -1,8 +1,8 @@
 module id_ex(
     input [31:0]br1,br2,br3,br4,
-    input [4:0]br5,
+    input [2:0]br5,
     input br6,br7,br8,br9,br10,br11,br15,br16,
-    input clk,nop,
+    input clk,nop,rst,
     input [4:0]br12,br13,br14,
     output reg [31:0]bo1,bo2,bo3,bo4,
     output reg [2:0]bo5,
@@ -12,7 +12,26 @@ module id_ex(
 
     always@ (posedge clk)
     begin
-        if (nop == 1'b1) begin
+        if (rst == 1'b1) begin
+            bo1 <= 32'b0;
+            bo2 <= 32'b0;
+            bo3 <= 32'b0;
+            bo4 <= 32'b0;
+            bo5 <= 3'b0;
+            bo6 <= 1'b0;
+            bo7 <= 1'b0;
+            bo8 <= 1'b0;
+            bo9 <= 1'b0;
+            bo10 <= 1'b0;
+            bo11 <= 1'b0;
+            bo12 <= 5'b0;
+            bo13 <= 5'b0;
+            bo14 <= 5'b0;
+            bo15 <= 1'b0;
+            bo16 <= 1'b0;
+        end
+        else begin
+            if (nop == 1'b1) begin
             bo5 <= 2'b00;
 
             bo6 <= 1'b0;
@@ -42,6 +61,7 @@ module id_ex(
             bo14 <= br14;
             bo15 <= br15;
             bo16 <= br16;
+        end
         end
     end
 endmodule

@@ -1,12 +1,14 @@
 `timescale 1ns / 1ps
-module main_decoder(opcode,sel1,sel2,sel3,we,we3,bre,brn,op,j,ofs,mrd);
+module main_decoder(opcode,sel1,sel2,sel3,we,we3,bre,brn,op,j,ofs,mrd,rst);
+input rst;
 input [5:0]opcode;
 output reg sel1,sel2,sel3,we,we3,bre,brn,j,ofs,mrd;
 output reg [2:0]op;
 
 always@ (*)
 begin
-sel1 = 1'b0;
+if (rst == 1'b1) begin
+        sel1 = 1'b0;
 sel2 = 1'b0;
 sel3 = 1'b0;
 we = 1'b0;
@@ -17,7 +19,9 @@ j = 1'b0;
 ofs = 1'b0;
 op = 3'b000;
 mrd = 1'b0;
-case (opcode)
+end
+else begin
+        case (opcode)
         0 : begin
                 we3 = 1'b1;
                 sel3 = 1'b1;
@@ -164,5 +168,6 @@ case (opcode)
                 ofs = 1'b0;
         end
         endcase
+end
 end
 endmodule
