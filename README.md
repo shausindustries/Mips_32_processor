@@ -50,14 +50,16 @@ This repository contains the evolutionary stages a MIPS32 processor.
 - Switched from Xilinx Vivado to VS Code in Ubuntu 24.04 LTS.
 - Introduced Dynamic Branch Prediction.
 - Synthesised the RTL design to Logical Design using Yosys and sky130A pdk.
+- Implemented a reset architecture.
+- Simulated and verified stalling, forwarding, dynamic branch prediction, branch not taken behaviour using waveform analysis.
+
+**_Note:_** You can check the waveform in sim folder.
 
 - **_Features:_**
   * Handles Data Hazards via stalling and forwarding.
   * Handles Control Hazards via stalling and branch not taken.
   * Reduces instruction penalty using a Branch History Table.
   * Reliable prediction using a 2-bit Branch Target Buffer.
-  * Implemented a reset architecture.
-  * Simulated and verified stalling, forwarding, dynamic branch prediction, branch not taken behaviour using waveform analysis.
 
 - **_Limitation:_**
   * Minimum parallelism.
@@ -69,5 +71,4 @@ This repository contains the evolutionary stages a MIPS32 processor.
   * Deep pipeline.
   * Multicore and Multithread design.
 
-**_Note:_** You can check the waveform in sim folder.
 
