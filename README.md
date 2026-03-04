@@ -56,6 +56,8 @@ This repository contains the evolutionary stages a MIPS32 processor.
   * Handles Control Hazards via stalling and branch not taken.
   * Reduces instruction penalty using a Branch History Table.
   * Reliable prediction using a 2-bit Branch Target Buffer.
+  * Implemented a reset architecture.
+  * Simulated and verified stalling, forwarding, dynamic branch prediction, branch not taken behaviour using waveform analysis.
 
 - **_Limitation:_**
   * Minimum parallelism.
@@ -66,4 +68,6 @@ This repository contains the evolutionary stages a MIPS32 processor.
   * Static and Dynamic Multiple Issue.
   * Deep pipeline.
   * Multicore and Multithread design.
+
+**_Note:_** You can check the waveform in sim folder.
 
