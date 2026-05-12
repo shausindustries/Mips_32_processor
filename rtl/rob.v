@@ -28,7 +28,7 @@ begin
             ip_ptr <= 3'b000;
         end
         else begin
-            ip_ptr <= ip_ptr + 1;
+            ip_ptr <= ip_ptr + 1'b1;
         end
         end
         if (commit == 1'b1) begin
@@ -38,7 +38,7 @@ begin
                 op_ptr <= 3'b000;
             end
             else begin
-                op_ptr <= op_ptr + 1;
+                op_ptr <= op_ptr + 1'b1;
             end
         end
         end

@@ -9,7 +9,7 @@ output reg [31:0]q1;
 output reg [31:0]q2;
 
 reg [31:0] mem [0:31];
-reg [2:0] qi [0:31];
+reg [3:0] qi [0:31];
 integer i;
 
 
@@ -18,7 +18,7 @@ always@ (negedge clk)
         if (rst == 1'b1) begin
             for (i=0; i<33; i = i + 1) begin
                 mem[i] <= 32'b0;
-                qi[i] <= 32'b0;
+                qi[i] <= 4'b0;
             end
             end
         else begin
