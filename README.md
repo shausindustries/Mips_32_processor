@@ -66,11 +66,15 @@ This repository contains the evolutionary stages a MIPS32 processor.
 - **_Limitation:_**
   * Minimum parallelism.
   * Branch delay slot.
+  * Prediction accuracy.
+  * Memory access time.
 
 - **_Future Improvements:_**
-  * Superscalar design.
-  * Static and Dynamic Multiple Issue.
-  * Deep pipeline.
+  
+  * Set associative cache integration for instruction and data memory.
+  * Integrating tournament predictor.
+  * Implementing Out-of-Order processor.
+  * Implementing Vector Architecture.
   * Multicore and Multithread design.
 
 
