@@ -4,7 +4,9 @@ x86 architecture which belongs to the CISC (Complex Instruction Set Computer) ar
 This repository contains the evolutionary stages a MIPS32 processor.
 
 **_Version 1:_**
-- First, an implementation of a very basic single cycle MIPS processor was done using Verilog using Xilinx Vivado.
+- Implementation of a very basic single cycle MIPS processor was done using Verilog using Xilinx Vivado.
+
+**_Version 2:_**
 - Then, the single cycle design was redesigned into a very straightforward 5 stage pipeline.
   1. IF - Instruction Fetch
   2. ID - Instruction Decode
@@ -25,11 +27,12 @@ This repository contains the evolutionary stages a MIPS32 processor.
 
 
 
-**_Version 2:_**
+**_Version 3:_**
 - Design upgraded to execute J - type instructions.
 - Implemented a control unit for the pipelined processor.
 - Pipeline registers were defined explicitly as separate modules.
 - The scale of instructions executed was increased.
+- Simulated and verified the functioning using Iverilog and GTKWave.
 
 **_Note:_** Some of the instructions have the same implementation as the ones already implemented (like subu,addu etc), hence they have been eschewed.
   
@@ -38,6 +41,7 @@ This repository contains the evolutionary stages a MIPS32 processor.
   * Executes insrtructions like jump.
   * Flexibility in controlling pipeline stages.
   * Prioritized PC input.
+  * Fully verified functional verification.
 
 - **_Limitations:_**
   * Could not handle data and control hazards.
@@ -45,7 +49,7 @@ This repository contains the evolutionary stages a MIPS32 processor.
 
 
 
-**_Version 3: (current)_**
+**_Version 4: (current)_**
 - Implemented stall unit, forwarding unit and static branch not taken.
 - Switched from Xilinx Vivado to VS Code in Ubuntu 24.04 LTS.
 - Introduced Dynamic Branch Prediction.
