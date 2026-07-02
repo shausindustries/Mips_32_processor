@@ -49,7 +49,7 @@ This repository contains the evolutionary stages a MIPS32 processor.
 
 
 
-**_Version 4: (current)_**
+**_Version 4:_**
 - Implemented stall unit, forwarding unit and static branch not taken.
 - Switched from Xilinx Vivado to VS Code in Ubuntu 24.04 LTS.
 - Introduced Dynamic Branch Prediction.
@@ -73,12 +73,26 @@ This repository contains the evolutionary stages a MIPS32 processor.
   * Prediction accuracy.
   * Memory access time.
 
-- **_Future Improvements:_**
-  
-  * Set associative cache integration for instruction and data memory.
-  * Integrating tournament predictor.
-  * Implementing Out-of-Order processor.
-  * Implementing Vector Architecture.
-  * Multicore and Multithread design.
 
+
+**_Version 5: (Current)_**
+- A crude implementation of an Out-of-Order execution processor core.
+- Eligible for RISC-V ADD and BEQ instructions.
+
+- **_Features:_**
+  * Reservation stations to increase Instruction Level Parallelism.
+  * Instruction Queue and Reorder Buffer for In-Order fetch and commits.
+  * Register Renaming to avoid WAW and WAR hazards.
+  * Common Data Bus between reservations stations, ROB and Register File.
+  * Mispredict recovery mechanism.
+
+- **_Limitations:_**
+  * Can execute only two instructions.
+  * Less accurate speculation.
+    
+- **_Future Improvements:_**
+  * Integrate tournament predictor.
+  * Expand instruction execution.
+  * Integrate pipelined Floating Point functional units.
+  * Improve instruction retirement.
 
