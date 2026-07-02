@@ -1,8 +1,9 @@
 `timescale 1ns / 1ps
-module reg_file(a1,a2,a3,wd3,rd1,rd2,clk,we3,rst,q1,q2);
+module reg_file(a1,a2,a3,wq3,wd3,rd1,rd2,clk,we3,rst,q1,q2,wq);
 input [4:0]a1,a2,a3;
 input [31:0]wd3;
-input clk,we3,rst;
+input [3:0]wq3;
+input clk,we3,rst,wq;
 output reg [31:0]rd1;
 output reg [31:0]rd2;
 output reg [31:0]q1;
@@ -24,16 +25,19 @@ always@ (negedge clk)
         else begin
             if (we3)
                 mem[a3] <= wd3;
+            else if (wq)
+                qi[a3] <= wq3;
     end
     end
 
 //we can reduce wires by using a qi = 0 signal for a mux
-always @(*) begin
+//later the wq3 signal can be used to read qi field from the same wd3 port and same a3 port
+always@(*) begin
     if (a1 == 5'd0) begin
         rd1 = 32'b0;
     end
     else begin
-        if (qi[a1] == 3'b000) begin
+        if (qi[a1] == 4'b0000) begin
             rd1 = mem[a1];
         end
         else begin
@@ -44,7 +48,7 @@ always @(*) begin
         rd2 = 32'b0;
     end
     else begin
-        if (qi[a2] == 32'b0) begin
+        if (qi[a2] == 4'b0000) begin
             rd2 = mem[a2];
         end
         else begin

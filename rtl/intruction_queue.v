@@ -1,10 +1,10 @@
-module instruction_queue(in, out, clk, ready, empty, rst);
+module intruction_queue(in, out, clk, ready, empty, rst);
 input clk, rst;
-input [31:0]in;
+input [63:0]in;
 output ready, empty;
 output reg [31:0]out;
 
-reg [31:0] mem [0:7];
+reg [63:0] mem [0:7];
 reg [2:0] op_ptr;
 reg [2:0] ip_ptr;
 

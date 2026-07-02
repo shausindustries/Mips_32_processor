@@ -1,4 +1,4 @@
-module reservation_station(clk,op,rd1,rd2,q1,q2,cdb,a,opa,opb,rn,tag,ad_dr);
+module br_rs(clk,op,rd1,rd2,q1,q2,cdb,a,opa,opb,rn,tag,ad_dr);
 input [5:0]op;
 input [31:0]rd1,rd2;
 input [3:0]q1,q2,rn;
@@ -8,6 +8,7 @@ input clk;
 output reg [31:0]opa,opb,ad_dr;
 output reg [3:0]tag;
 
+reg [31:0] pc [0:14];
 reg [3:0] num [0:14];
 reg [5:0] opr [0:14];
 reg [31:0] vj [0:14];
