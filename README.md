@@ -75,10 +75,12 @@ graph LR
 
 ## 🚀 Out-of-Order Execution Architecture (V5)
 The Out-of-Order core decouples in-order instruction fetch from execution to maximize Instruction-Level Parallelism (ILP):
+
 Mermaid diagram
-Register Renaming: Maps architectural registers to ROB entries to eliminate Write-After-Read (WAR) and Write-After-Write (WAW) false dependencies.
-Reorder Buffer (ROB): Maintains in-order retirement to ensure precise exception handling and speculative state recovery.
-Common Data Bus (CDB): Broadcasts computed results and tags directly to waiting reservation stations and the ROB.
+
+* **_Register Renaming_**: Maps architectural registers to ROB entries to eliminate Write-After-Read (WAR) and Write-After-Write (WAW) false dependencies.
+* **_Reorder Buffer (ROB)_**: Maintains in-order retirement to ensure precise exception handling and speculative state recovery.
+* **_Common Data Bus (CDB)_**: Broadcasts computed results and tags directly to waiting reservation stations and the ROB.
 
 ## ⚙️ Architectural Specifications
 Parameter	Specification
