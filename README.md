@@ -57,7 +57,7 @@ graph LR
     end
 ```
 
-⚡ Dynamic Branch Prediction & Hazard Resolution (V4)
+##⚡ Dynamic Branch Prediction & Hazard Resolution (V4)
 Data Hazard Resolution:
 EX -> EX Forwarding: Feeds ALU result directly to the next instruction's ALU input.
 MEM -> EX Forwarding: Feeds memory load or delayed ALU result to the execute stage.
@@ -72,4 +72,25 @@ Branch History Table (BHT): 2-bit saturating counter state machine (Strongly Not
 ↔ Strongly Taken).
 Branch Target Buffer (BTB): Caches target branch addresses to fetch target instructions with zero bubble penalty on branch predictions.
 Mispredict Recovery: Flushes speculative instructions in IF/ID and restores correct sequential PC.
+
+##🚀 Out-of-Order Execution Architecture (V5)
+The Out-of-Order core decouples in-order instruction fetch from execution to maximize Instruction-Level Parallelism (ILP):
+Mermaid diagram
+Register Renaming: Maps architectural registers to ROB entries to eliminate Write-After-Read (WAR) and Write-After-Write (WAW) false dependencies.
+Reorder Buffer (ROB): Maintains in-order retirement to ensure precise exception handling and speculative state recovery.
+Common Data Bus (CDB): Broadcasts computed results and tags directly to waiting reservation stations and the ROB.
+
+##⚙️ Architectural Specifications
+Parameter	Specification
+Data Path Width	32-bit
+Supported ISA	MIPS-32 Base (R-type, I-type, J-type) / RV32 Integer mapping
+Pipeline Depth	5 Stages (IF, ID, EX, MEM, WB)
+Register File	32 General-Purpose 32-bit Registers (Dual-Read, Single-Write)
+Branch Predictor	2-bit Saturating Counter BHT + 2-bit BTB
+Target Technology	SkyWater 130nm (sky130_fd_sc_hd) via Yosys Open Synthesis
+
+##🧪 Simulation & Verification Flow
+Prerequisites
+iverilog (Icarus Verilog v11+)
+gtkwave
 
