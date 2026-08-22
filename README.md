@@ -55,9 +55,9 @@ graph LR
         EX_MEM --> MEM_WB
         MEM_WB --> RF
     end
-**` ``` `**
+```
 
-⚡ Dynamic Branch Prediction & Hazard Resolution (V4)
+## ⚡ Dynamic Branch Prediction & Hazard Resolution (V4)
 Data Hazard Resolution:
 EX -> EX Forwarding: Feeds ALU result directly to the next instruction's ALU input.
 MEM -> EX Forwarding: Feeds memory load or delayed ALU result to the execute stage.
