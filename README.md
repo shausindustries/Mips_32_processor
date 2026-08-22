@@ -23,9 +23,6 @@ V5: Out-of-Order Engine (Instruction Queue, Reservation Stations, ROB, CDB)
 ---
 
 ## 🏗️ 5-Stage Pipelined Datapath (In-Order Core)
-## 🏗️ 5-Stage Pipelined Datapath (In-Order Core)
-
-## 🏗️ 5-Stage Pipelined Datapath (In-Order Core)
 
 ```mermaid
 graph LR
@@ -58,6 +55,7 @@ graph LR
         EX_MEM --> MEM_WB
         MEM_WB --> RF
     end
+**` ``` `**
 
 ⚡ Dynamic Branch Prediction & Hazard Resolution (V4)
 Data Hazard Resolution:
