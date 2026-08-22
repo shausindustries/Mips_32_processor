@@ -90,7 +90,7 @@ Branch Predictor	2-bit Saturating Counter BHT + 2-bit BTB
 Target Technology	SkyWater 130nm (sky130_fd_sc_hd) via Yosys Open Synthesis
 
 ## 🧪 Simulation & Verification Flow
-Prerequisites
-iverilog (Icarus Verilog v11+)
-gtkwave
+**_Prerequisites_**
+* iverilog (Icarus Verilog v11+)
+* gtkwave
 
