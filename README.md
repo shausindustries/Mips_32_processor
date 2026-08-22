@@ -58,11 +58,11 @@ graph LR
 ```
 
 ## ⚡ Dynamic Branch Prediction & Hazard Resolution (V4)
-**Data Hazard Resolution:**
-EX -> EX Forwarding: Feeds ALU result directly to the next instruction's ALU input.
-MEM -> EX Forwarding: Feeds memory load or delayed ALU result to the execute stage.
-Load-Use Interlock: Automatic single-cycle stall inserted when a load instruction is followed immediately by a dependent instruction.
-Control Hazard Resolution:
+**_Data Hazard Resolution:_**
+- EX -> EX Forwarding: Feeds ALU result directly to the next instruction's ALU input.
+- MEM -> EX Forwarding: Feeds memory load or delayed ALU result to the execute stage.
+- **Load-Use Interlock**: Automatic single-cycle stall inserted when a load instruction is followed immediately by a dependent instruction.
+**_Control Hazard Resolution:_**
 Branch History Table (BHT): 2-bit saturating counter state machine (Strongly Not Taken 
 ↔
 ↔ Weakly Not Taken 
