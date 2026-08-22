@@ -23,6 +23,9 @@ V5: Out-of-Order Engine (Instruction Queue, Reservation Stations, ROB, CDB)
 ---
 
 ## 🏗️ 5-Stage Pipelined Datapath (In-Order Core)
+## 🏗️ 5-Stage Pipelined Datapath (In-Order Core)
+
+## 🏗️ 5-Stage Pipelined Datapath (In-Order Core)
 
 ```mermaid
 graph LR
