@@ -1,98 +1,57 @@
-**_MIPS-32 Processor:_**
-MIPS is a subset of the RISC (Reduced Instruction Set Computer) architecture. It is easier to understand and implement as compared to the
-x86 architecture which belongs to the CISC (Complex Instruction Set Computer) architectural family.
-This repository contains the evolutionary stages a MIPS32 processor.
+# 32-Bit Pipelined & Out-of-Order Processor Architecture
 
-**_Version 1:_**
-- Implementation of a very basic single cycle MIPS processor was done using Verilog using Xilinx Vivado.
+![HDL](https://img.shields.io/badge/HDL-Verilog%20%7C%20SystemVerilog-blue)
+![PDK](https://img.shields.io/badge/PDK-SkyWater%20130nm-green)
+![Simulation](https://img.shields.io/badge/Simulation-Icarus%20Verilog%20%7C%20GTKWave-orange)
+![Synthesis](https://img.shields.io/badge/Synthesis-Yosys%20Open%20Flow-purple)
+![License](https://img.shields.io/badge/License-MIT-lightgrey)
 
-**_Version 2:_**
-- Then, the single cycle design was redesigned into a very straightforward 5 stage pipeline.
-  1. IF - Instruction Fetch
-  2. ID - Instruction Decode
-  3. EX - Execution
-  4. MEM - Memory
-  5. WB - WriteBack
+A modular, synthesizable 32-bit processor core demonstrating progressive microarchitectural evolution: from a single-cycle baseline to a 5-stage hazard-resolved pipelined datapath, dynamic branch prediction, and an Out-of-Order execution engine based on the Tomasulo algorithm.
 
-- **_Features:_**
-  * 5 stage pipeline to increase efficiency of the processor.
-  * Separate data and instruction memory.
-  * Execution of R and I type instructions.
+---
 
-- **_Limitations:_**
-  * Incomplete design without control unit.
-  * Could not execute J - type instructions.
-  * Could not handle hazards.
-  * Program Counter input priority was not defined.
+## 🏛️ Microarchitectural Progression
+
+The processor architecture is structured into five evolutionary stages:
+V1: Single-Cycle Baseline Datapath
+V2: 5-Stage In-Order Pipelined Datapath (IF -> ID -> EX -> MEM -> WB)
+V3: Integrated Control Unit, Explicit Pipeline Registers, & J-Type Decoding
+V4: Data Forwarding, Hazard Stalls, & 2-Bit Dynamic Branch Prediction (BHT/BTB)
+V5: Out-of-Order Engine (Instruction Queue, Reservation Stations, ROB, CDB)
 
 
+---
 
-**_Version 3:_**
-- Design upgraded to execute J - type instructions.
-- Implemented a control unit for the pipelined processor.
-- Pipeline registers were defined explicitly as separate modules.
-- The scale of instructions executed was increased.
-- Simulated and verified the functioning using Iverilog and GTKWave.
+## 🏗️ 5-Stage Pipelined Datapath (In-Order Core)
 
-**_Note:_** Some of the instructions have the same implementation as the ones already implemented (like subu,addu etc), hence they have been eschewed.
-  
-- **_Features:_**
-  * Well defined control unit with a main decoder and ALU decoder.
-  * Executes insrtructions like jump.
-  * Flexibility in controlling pipeline stages.
-  * Prioritized PC input.
-  * Fully verified functional verification.
+```mermaid
+graph LR
+    subgraph IF ["1. Instruction Fetch (IF)"]
+        PC["Program Counter"] --> IMEM["Instruction Memory"]
+        BHT["2-Bit BHT / BTB"] -.-> PC
+    end
 
-- **_Limitations:_**
-  * Could not handle data and control hazards.
-  * Negligible parallelism.
+    subgraph ID ["2. Instruction Decode (ID)"]
+        IMEM --> IF_ID["IF/ID Register"]
+        IF_ID --> CTRL["Main & ALU Decoder"]
+        IF_ID --> RF["32x32 Register File"]
+    end
 
+    subgraph EX ["3. Execution (EX)"]
+        CTRL --> ID_EX["ID/EX Register"]
+        RF --> ID_EX
+        ID_EX --> FWD["Hazard & Forwarding Unit"]
+        FWD --> ALU["32-bit Arithmetic Unit"]
+        ALU --> BR_EVAL["Branch Resolution Unit"]
+    end
 
+    subgraph MEM ["4. Memory Access (MEM)"]
+        ALU --> EX_MEM["EX/MEM Register"]
+        EX_MEM --> DMEM["Data Memory"]
+    end
 
-**_Version 4:_**
-- Implemented stall unit, forwarding unit and static branch not taken.
-- Switched from Xilinx Vivado to VS Code in Ubuntu 24.04 LTS.
-- Introduced Dynamic Branch Prediction.
-- Synthesised the RTL design to Logical Design using Yosys and sky130A pdk.
-- Implemented a reset architecture.
-- Simulated and verified behaviours using waveform analysis.
-
-**_Note:_** You can check the waveform in sim folder.
-
-- **_Features:_**
-  * Handles Data Hazards via stalling and forwarding.
-  * Handles Control Hazards via stalling and branch not taken.
-  * Reduces instruction penalty using a Branch History Table.
-  * Reliable prediction using a 2-bit Branch Target Buffer.
-  * Verified forwarding, stalling, branch not taken, branch prediction.
-  * Verified in order execution.
-
-- **_Limitation:_**
-  * Minimum parallelism.
-  * Branch delay slot.
-  * Prediction accuracy.
-  * Memory access time.
-
-
-
-**_Version 5: (Current)_**
-- A crude implementation of an Out-of-Order execution processor core.
-- Eligible for RISC-V ADD and BEQ instructions.
-
-- **_Features:_**
-  * Reservation stations to increase Instruction Level Parallelism.
-  * Instruction Queue and Reorder Buffer for In-Order fetch and commits.
-  * Register Renaming to avoid WAW and WAR hazards.
-  * Common Data Bus between reservations stations, ROB and Register File.
-  * Mispredict recovery mechanism.
-
-- **_Limitations:_**
-  * Can execute only two instructions.
-  * Less accurate speculation.
-    
-- **_Future Improvements:_**
-  * Integrate tournament predictor.
-  * Expand instruction execution.
-  * Integrate pipelined Floating Point functional units.
-  * Improve instruction retirement.
-
+    subgraph WB ["5. Write-Back (WB)"]
+        DMEM --> MEM_WB["MEM/WB Register"]
+        EX_MEM --> MEM_WB
+        MEM_WB --> RF
+    end
