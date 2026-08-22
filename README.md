@@ -55,3 +55,19 @@ graph LR
         EX_MEM --> MEM_WB
         MEM_WB --> RF
     end
+
+⚡ Dynamic Branch Prediction & Hazard Resolution (V4)
+Data Hazard Resolution:
+EX -> EX Forwarding: Feeds ALU result directly to the next instruction's ALU input.
+MEM -> EX Forwarding: Feeds memory load or delayed ALU result to the execute stage.
+Load-Use Interlock: Automatic single-cycle stall inserted when a load instruction is followed immediately by a dependent instruction.
+Control Hazard Resolution:
+Branch History Table (BHT): 2-bit saturating counter state machine (Strongly Not Taken 
+↔
+↔ Weakly Not Taken 
+↔
+↔ Weakly Taken 
+↔
+↔ Strongly Taken).
+Branch Target Buffer (BTB): Caches target branch addresses to fetch target instructions with zero bubble penalty on branch predictions.
+Mispredict Recovery: Flushes speculative instructions in IF/ID and restores correct sequential PC.
