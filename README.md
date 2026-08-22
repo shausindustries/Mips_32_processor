@@ -58,7 +58,7 @@ graph LR
 ```
 
 ## ⚡ Dynamic Branch Prediction & Hazard Resolution (V4)
-Data Hazard Resolution:
+**Data Hazard Resolution:**
 EX -> EX Forwarding: Feeds ALU result directly to the next instruction's ALU input.
 MEM -> EX Forwarding: Feeds memory load or delayed ALU result to the execute stage.
 Load-Use Interlock: Automatic single-cycle stall inserted when a load instruction is followed immediately by a dependent instruction.
@@ -80,7 +80,7 @@ Register Renaming: Maps architectural registers to ROB entries to eliminate Writ
 Reorder Buffer (ROB): Maintains in-order retirement to ensure precise exception handling and speculative state recovery.
 Common Data Bus (CDB): Broadcasts computed results and tags directly to waiting reservation stations and the ROB.
 
-##⚙️ Architectural Specifications
+## ⚙️ Architectural Specifications
 Parameter	Specification
 Data Path Width	32-bit
 Supported ISA	MIPS-32 Base (R-type, I-type, J-type) / RV32 Integer mapping
