@@ -19,7 +19,6 @@ V3: Integrated Control Unit, Explicit Pipeline Registers, & J-Type Decoding
 V4: Data Forwarding, Hazard Stalls, & 2-Bit Dynamic Branch Prediction (BHT/BTB)
 V5: Out-of-Order Engine (Instruction Queue, Reservation Stations, ROB, CDB)
 
-
 ---
 
 ## 🏗️ 5-Stage Pipelined Datapath (In-Order Core)
@@ -73,26 +72,65 @@ graph LR
   - **_Branch Target Buffer (BTB)_**: Caches target branch addresses to fetch target instructions with zero bubble penalty on branch predictions.
   - **_Mispredict Recovery_**: Flushes speculative instructions in IF/ID and restores correct sequential PC.
 
+
 ## 🚀 Out-of-Order Execution Architecture (V5)
+
 The Out-of-Order core decouples in-order instruction fetch from execution to maximize Instruction-Level Parallelism (ILP):
 
-Mermaid diagram
+```mermaid
+graph TD
+    FETCH["In-Order Fetch & Decode"] --> IQ["Instruction Queue"]
+    IQ --> ISSUE["Issue & Rename Logic"]
+    ISSUE --> RAT["Register Alias Table"]
+    ISSUE --> ROB["Reorder Buffer (ROB)"]
+    ISSUE --> RS["Reservation Stations"]
+    
+    RS --> EX_INT["Integer Execution Unit"]
+    RS --> EX_BR["Branch Unit"]
+    
+    EX_INT --> CDB["Common Data Bus (CDB)"]
+    EX_BR --> CDB
+    
+    CDB --> RS
+    CDB --> ROB
+    CDB --> RF["Architectural Register File"]
+    
+    ROB --> RETIRE["In-Order Commit / Retirement"]
+```
 
-* **_Register Renaming_**: Maps architectural registers to ROB entries to eliminate Write-After-Read (WAR) and Write-After-Write (WAW) false dependencies.
-* **_Reorder Buffer (ROB)_**: Maintains in-order retirement to ensure precise exception handling and speculative state recovery.
-* **_Common Data Bus (CDB)_**: Broadcasts computed results and tags directly to waiting reservation stations and the ROB.
+* **Register Renaming**: Maps architectural registers to ROB entries to eliminate Write-After-Read (WAR) and Write-After-Write (WAW) false dependencies.
+* **Reorder Buffer (ROB)**: Maintains in-order retirement to ensure precise exception handling and speculative state recovery.
+* **Common Data Bus (CDB)**: Broadcasts computed results and tags directly to waiting reservation stations and the ROB.
+
+---
 
 ## ⚙️ Architectural Specifications
-Parameter	Specification
-Data Path Width	32-bit
-Supported ISA	MIPS-32 Base (R-type, I-type, J-type) / RV32 Integer mapping
-Pipeline Depth	5 Stages (IF, ID, EX, MEM, WB)
-Register File	32 General-Purpose 32-bit Registers (Dual-Read, Single-Write)
-Branch Predictor	2-bit Saturating Counter BHT + 2-bit BTB
-Target Technology	SkyWater 130nm (sky130_fd_sc_hd) via Yosys Open Synthesis
+
+| Parameter | Specification |
+| :--- | :--- |
+| **Data Path Width** | 32-bit |
+| **Supported ISA** | MIPS-32 Base (R-type, I-type, J-type) / RV32 Integer mapping |
+| **Pipeline Depth** | 5 Stages (`IF`, `ID`, `EX`, `MEM`, `WB`) |
+| **Register File** | 32 General-Purpose 32-bit Registers (Dual-Read, Single-Write) |
+| **Branch Predictor** | 2-bit Saturating Counter BHT + 2-bit BTB |
+| **Target Technology** | SkyWater 130nm (`sky130_fd_sc_hd`) via Yosys Open Synthesis |
+
+---
 
 ## 🧪 Simulation & Verification Flow
-**_Prerequisites_**
-* iverilog (Icarus Verilog v11+)
-* gtkwave
 
+### Prerequisites
+* `iverilog` (Icarus Verilog v11+)
+* `gtkwave`
+
+### Run Simulation:
+```bash
+# 1. Compile processor and testbench
+iverilog -o sim/core_sim.vvp rtl/*.v tb/tb_top.v
+
+# 2. Execute simulation
+vvp sim/core_sim.vvp
+
+# 3. View pipeline waveforms
+gtkwave sim/waveform.vcd
+```
