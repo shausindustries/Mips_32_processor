@@ -2,7 +2,7 @@ module intruction_queue(in, out, clk, ready, empty, rst);
 input clk, rst;
 input [63:0]in;
 output ready, empty;
-output reg [31:0]out;
+output reg [63:0]out;
 
 reg [63:0] mem [0:7];
 reg [2:0] op_ptr;

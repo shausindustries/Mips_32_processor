@@ -1,4 +1,5 @@
-module bu(in1,in2,flag,cdb,imm,tag, pc_addr);
+module bu(in1,in2,flag,cdb,imm,tag,pc_addr,taken);
+input taken;
 input [31:0]in1,in2,imm,pc_addr;
 input [3:0]tag;
 output [35:0]cdb;
@@ -7,7 +8,7 @@ output reg flag;
 wire out,eximm,addr;
 
 assign out = in1 - in2;
-assign addr = pc_addr + (imm << 2);
+assign addr = taken ? pc_addr + imm : pc_addr;
 assign cdb = {tag, addr};
 
 always @(*) begin

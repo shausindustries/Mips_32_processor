@@ -4,54 +4,76 @@ module top(of,clk,rst);
 input clk,rst;
 output of;
 
-wire [35:0]cdb;
-wire [36:0]rob_out;
-wire [31:0]pc,instr,alres2,iq,mr,rdreg1,rdreg2,rdq1,rdq2,ar1,ar2,ia1,ia2,addr,a_i,be_i,avko,
-ar1o,ar2o,br1o,br2o,adr,bdr,bvko,ib1,ib2,btp,bta,buaddr;
-wire [3:0]rob_tag,unit_tag,cdb_tag,aq1o,aq2o,bq1o,bq2o;
-wire flush_if,br7,we,weq,br,taken,vd,zf,valid;
+wire dr,wq,mulr,adr,subr,divr,ld,sw,beq,bne,j,br,adi,commit,rdya,emp,full,rdyl,rdylb,di,rdys,
+rdysb;
+wire [3:0] tag_rob,qj,qk,aqj,aqk,atag,bqj,bqk,btag,ldqj,ldqk,ldtag,swqk,swqj,swtag,mtag,mqj,mqk,dtag,
+dqj,dqk,stag,sqj,sqk,autag,lutag,lbtag,sbtag,sutag,qkrs,qksb;
+wire [4:0] ds_reg,com_reg;
+wire [5:0] aop,bop,ldop,swop,mop,dop,sop;
+wire [31:0] bmo,smo,jmo,pc_op,instr,nia,ins,addr,vj,vk,imm,br_addr,avj,avk,aa,bvj,bvk,ba,ldvj,
+ldvk,lda,swvj,swvk,swa,mvj,mvk,ma,dvj,dvk,da,svj,svk,sa,adopa,adopb,ldopa,ldopb,mem_addr_ld,
+jlabel,swopa,swopb,mem_addr_sw,vkrs,vksb;
+wire [35:0] cdb;
+wire [36:0] rob_out;
+wire [63:0] in_pkg;
 
-//Architecture
-prog_counter pc1 (.pco(pc),.clk(clk),.pci(m4r),.stl(stall),.rst(rst));
-pc_adder a2 (.in1(pc),.op(alres2));
-mux_32 m3 (.a(alres2),.b(btp),.sel(taken),.o(m3r));
-//mux_32 m4 (.a(m3r),.b(br4),.sel(mispredict),.o(m4r));
+assign ins = in_pkg[31:0];
+assign addr = in_pkg[63:32];
+assign br = beq | bne;
+
+prog_counter pc (.pci(jmo),.pco(pc_op),.clk(clk),.stl(full & ~(emp)),.rst(rst));
+pc_adder pa (.in(pc_op),.op(nia));
+mux_32 branch_mux (.a(/*branch target buffer*/),.b(/*recovery path*/),
+.sel(/*mispredict OR miss*/),.o(bmo));
+mux_32 step_mux (.a(bmo),.b(nia),.sel(br),.o(smo));
+mux_32 jump_mux (.a(smo),.b(jlabel),.sel(j),.o(jmo));
+
+ins_mem im (.a(pc_op),.rd(instr));
+intruction_queue iq (.in({pc_op,instr}),.out(in_pkg),.clk(clk),.rst(rst),.ready(),.empty());
+
+reg_file rf (.a1(ins[25:21]),.a2(ins[20:16]),.a3(ds_reg),.rd1(vj),.rd2(vk),.wd3(rob_out[31:0]),
+.wq3(tag_rob),.q1(qj),.q2(qk),.clk(clk),.we3(commit),.wqe(wq),.rst(rst));
+p_mux dest_reg (.a(ins[20:16]),.b(ins[15:11]),.sel(dr),.o(ds_reg));
+p_mux cm_reg (.a(ds_reg),.b(rob_out[36:32]),.o(com_reg),.sel(commit));
+
+sign_extend se1 (.in(ins[15:0]),.out(imm));
+
+rob r (.dr(ds_reg),.rn(tag_rob),.rst(rst),.clk(clk),.out(rob_out),.cdb(cdb),.commit(commit),
+.empty(emp),.full(full));
+
+controlunit cu (.op(ins[31:26]),.func(ins[5:0]),.dr(dr),.wq(wq),.mulr(mulr),.adr(adr),
+.subr(subr),.bne(bne),.beq(beq),.divr(divr),.ld(ld),.sw(sw));
+
+issue_logic il (rdya(rdya),rdyb(),rdys(rdys),rdyd(),rdym(),rdyld(rdyl),rdysw(),rdyj(),adr(adr),
+adi(adi),subr(subr),mulr(mulr),divr(divr),ld(ld),sw(sw),br(br),vj(vj),vk(vk),qj(qj),qk(qk),
+op(ins[31:26]),a(imm),tag(tag_rob),addr_in(addr),addr_out(br_addr),avj(avj),avk(avk),aqj(aqj),aqk(aqk),
+aa(aa),aop(aop),atag(atag),bvj(bvj),bvk(bvk),bqj(bqj),bqk(bqk),bop(bop),btag(btag),ba(ba),ldop(ldop),
+ldvj(ldvj),ldvk(ldvk),ldqj(ldqj),ldqk(ldqk),lda(lda),ldtag(ldtag),swop(swop),swvj(swvj),swvk(swvk),
+swqj(swqj),swqk(swqk),swtag(swtag),swa(swa),mop(mop),mvj(mvj),mvk(mvk),mqj(mqj),mqk(mqk),mtag(mtag),
+ma(ma),dop(dop),dvj(dvj),dvk(dvk),dqj(dqj),dqk(dqk),dtag(dtag),da(da),sop(sop),svj(svj),svk(svk),
+sqj(sqj),sqk(sqk),stag(stag),sa(sa));
+
+//Add
+reservation_station r1 (.rn(atag),.op(aop),.q1(aqj),.q2(aqk),.rd1(avj),.rd2(avk),.a(aa),.opa(adopa),
+.opb(adopb),.tag(autag),.cdb(cdb),.clk(clk),.ready(rdya));
+int_add ia (.opa(adopa),.opb(adopb),.tag(autag),.cdb(cdb));
+
+//Load
+reservation_station r2 (.rn(ldtag),.op(ldop),.q1(ldqj),.q2(ldqk),.rd1(ldvj),.rd2(ldvk),.clk(clk),
+.a(lda),.tag(lutag),.opa(ldopa),.opb(ldopb),.cdb(cdb),.ready(rdyl),.qko(),.vko());
+addr_unit_ld au1 (.a(ldopa),.b(ldopb),.mem_adr(mem_addr_ld),.tag_out(lbtag),.tag(lutag));
+lb buffer1 (.clk(clk),.in(mem_addr_ld),.cdb(cdb),.swa(),.tg(lbtag),.ready(rdylb),.data(),.di(di));
+
+//Store
+reservation_station r3 (.rn(swtag),.op(swop),.q1(swqj),.q2(swqk),.rd1(swvj),.rd2(swvk),.clk(clk),
+.a(swa),.tag(sutag),.opa(swopa),.opb(swopb),.cdb(cdb),.ready(rdys),.qko(qko),.vko(vko));
+addr_unit_sw au2 (.a(swopa),.b(swopb),.tg(sutag),.tgo(sbtag),.qk(qkrs),.vk(vkrs),.qko(qksb),
+.vko(vksb),.addr_out(mem_addr_sw));
+sb buffer2 ();
 
 
-ins_mem im1 (.a(pc),.rd(instr));
-intruction_queue im2 (.in(ar1),.out(iq),.clk(clk),.ready(),.empty(),.rst(rst));
+//Jump
+jdecoder jd (.op(instr[31:26]),.j(j),.label(instr[25:0]),.jtg(jlabel3),.addr(nia[31:28]));
 
-issue_logic il1(.instr(iq),.clk(clk),.we3(we),.wq(weq),.sel(br7),.add_i(a_i),.br_i(be_i),
-.br(br),.addr(addr),.ilt(vd),.fl(zf),.r1(rdreg1),.r2(rdreg2),.q1(rdq1),.q2(rdq2),
-.a_r1o(ar1o),.a_r2o(ar2o),.a_q1o(aq1o),.a_q2o(aq2o),.b_r1o(br1o),.b_r2o(br2o),
-.b_q1o(bq1o),.b_q2o(bq2o),.a_addr(adr),.b_addr(bdr));
-xor x1 (valid,vd,taken);
 
-sign_extend se1 (.in(be_i[0:15]),.out(addr));
-
-p_mux p1 (.a(iq[20:16]),.b(iq[15:11]),.sel(br7),.o(mr));
-reg_file rf1 (.a1(iq[25:21]),.a2(iq[20:16]),.a3(rob_out[36:32]),.rd1(rdreg1),
-.rd2(rdreg2),.wd3(rob_out[31:0]),.wq3(rob_tag),.clk(clk),.we3(we),.rst(rst),
-.q1(rdq1),.q2(rdq2),.wq(weq));
-mux_32 m1 (.a(ar2o),.b(adr),.sel(~(br7)),.o(avko));
-mux_32 m2 (.a(br2o),.b(bdr),.o(bvko),.sel(~(br7)));
-rob r1 (.dr(mr),.val_u(cdb),.clk(clk),.altadr(),.rst(rst),.rn(rob_tag),
-.s(),.ready(),.empty(),.out(rob_out),.commit());
-data_mem dm1 (.clk(clk),.a(cr1),.wd(m2r),.rd(d_out),.we(cr7));
-reservation_station rs1 (.op(a_i[31:26]),.rd1(ar1o),.rd2(avko),.clk(clk),.q1(aq1o),
-.q2(aq2o),.cdb(cdb),.opa(ia1),.a(adr),opb(ia2),.rn(rob_tag),.tag(unit_tag));
-int_add i1 (.opa(ia1),.opb(ia2),.tag(unit_tag),.cdb(cdb));
-reservation_station rs2 (.op(be_i[31:26]),.clk(clk),.rd1(br1o),.rd2(bvko),.q1(bq1o),.q2(bq2o),
-.a(bdr),.cdb(cdb),.rn(rob_tag),.tag(unit_tag),.opa(ib1),.opb(ib2),ad_dr(buaddr));
-bu b1 (.opa(ib1),.opb(ib2),.tag(unit_tag),.cdb(cdb),.imm(buaddr),.pc_adder(alres2),.flag(zf));
-
-//Stall Logic
-stall_unit s1 (.rtn(br12),.rs(ar1[25:21]),.rt(ar1[20:16]),.nop(nop),.stall(stall),
-.clk(clk),.memr(memrd));
-
-//Dynamic Branch Prediction
-bht b1 (.ind(pc[5:2]),.clk(clk),.val(vd),.br(br),.bta(addr),.taken(taken),.btp(btp),
-.ver(pc[pc[31:6]]));
-
-mux_32 m5 (.a(cdb[31:0]),.b(),.sel(),.o()); 
 endmodule

@@ -14,8 +14,6 @@ reg [31:0] btb [0:15];
 
 integer i;
 
-
-
 always @(*) begin
     for (i=0; i<16; i = i+1) begin
         if (br == 1'b1) begin

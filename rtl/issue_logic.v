@@ -1,62 +1,96 @@
-module issue_logic(clk,instr,add_i,br_i,we3,wq,sel,addr,br,fl,ilt,r1,r2,q1,q2,a_r1o,
-a_r2o,a_q1o,a_q2o, b_r1o,b_r2o,b_q1o,b_q2o,a_addr,b_addr);
-input [5:0]instr;
-input [31:0] r1,r2,addr;
-input [3:0]q1,q2;
-input clk,fl;
-output reg [31:0] a_r1o,a_r2o,b_r1o,b_r2o,a_addr,b_addr;
-output reg [3:0] a_q1o,a_q2o,b_q1o,b_q2o;
-output reg [5:0] add_i, br_i;
-output reg we3,wq,sel,br,ilt;
+module issue_logic (rdya,rdyb,rdys,rdyd,rdym,rdyld,rdysw,adr,adi,subr,mulr,divr,ld,sw,br,
+vj,vk,qj,qk,op,a,tag,addr_in,addr_out,avj,avk,aqj,aqk,aa,aop,atag,bvj,bvk,bqj,bqk,bop,btag,ba,
+ldop,ldvj,ldvk,ldqj,ldqk,lda,ldtag,swop,swvj,swvk,swqj,swqk,swtag,swa,mop,mvj,mvk,mqj,mqk,mtag,ma,
+dop,dvj,dvk,dqj,dqk,dtag,da,sop,svj,svk,sqj,sqk,stag,sa);
 
-always@ (clk) begin
-    case (instr[5:0])
-        0 : begin
-            sel <= 1'b1;
-            case (instr[5:0])
-                20 : begin
-                        add_i <= instr;
-                        a_r1o <= r1;
-                        a_r2o <= r2;
-                        a_q1o <= q1;
-                        a_q2o <= q2;
-                        a_addr <= addr;
-                end
-            endcase
-            end
-        4 : begin
-                br_i <= instr;
-                b_r1o <= r1;
-                b_r2o <= r2;
-                b_addr <= addr;
-                b_q1o <= q1;
-                b_q2o <= q2;
-                br <= 1'b1;
-                if (fl == 1'b1) begin
-                    ilt <= 1'b1;
-                end
-                else
-                    ilt <= 1'b0;
+input adr,adi,subr,mulr,divr,ld,sw,br,rdya,rdyb,rdys,rdyd,rdym,rdyld,rdysw;
+input [31:0]vj,vk,addr_in,a;
+input [5:0]op;
+input [3:0]qj,qk,tag;
+output reg [31:0] addr_out,avj,avk,aa,bvj,bvk,ba,ldvj,ldvk,lda,swvj,swvk,swa,mvj,mvk,ma,dvj,dvk,
+da,svj,svk,sa;
+output reg [5:0]aop,bop,ldop,swop,mop,dop,sop;
+output reg [3:0]aqj,aqk,atag,bqj,bqk,btag,ldqj,ldqk,ldtag,swqk,swqj,swtag,mtag,mqj,mqk,dtag,dqj,
+dqk,stag,sqj,sqk;
+always@ (*)
+begin
+    if (adr | adi) begin
+        if (rdya) begin
+            atag = tag;
+            aop = op;
+            avj = vj;
+            avk = vk;
+            aqj = qj;
+            aqk = qk;
+            aa = a;
         end
-        5 : begin
-                br_i <= instr;
-                br <= 1'b1;
-                b_r1o <= r1;
-                b_r2o <= r2;
-                b_addr <= addr;
-                b_q1o <= q1;
-                b_q2o <= q2;
-                br <= 1'b1;
-                if (fl == 1'b1) begin
-                    ilt <= 1'b0;
-                end
-                else
-                    ilt <= 1'b1;
+    end
+    else if (subr) begin
+        if (rdys) begin
+            stag = tag;
+            sop = op;
+            svj = vj;
+            svk = vk;
+            sqj = qj;
+            sqk = qk;
+            sa = a;
         end
-        default : begin
-                    sel <= 1'b0;
-                    br <= 1'b0;
+    end
+    else if (mulr) begin
+        if (rdym) begin
+            mtag = tag;
+            mop = op;
+            mvj = vj;
+            mvk = vk;
+            mqj = qj;
+            mqk = qk;
+            ma = a;
         end
-    endcase
+    end
+    else if (divr) begin
+        if (rdyd) begin
+            dtag = tag;
+            dop = op;
+            dvj = vj;
+            dvk = vk;
+            dqj = qj;
+            dqk = qk;
+            da = a;
+        end
+    end
+    else if (br) begin
+        if (rdyb) begin
+            bop = op;
+            btag = tag;
+            bvj = vj;
+            bvk = vk;
+            bqj = qj;
+            bqk = qk;
+            ba = a;
+            addr_out = addr_in;
+        end
+    end
+    else if (ld) begin
+        if (rdyld) begin
+            ldtag = tag;
+            ldop = op;
+            ldvj = vj;
+            ldvk = 32'bx;
+            ldqj = qj;
+            ldqk = 4'bx;
+            lda = a;
+        end
+    end
+    else if (sw) begin
+        if (rdysw) begin
+            swtag = tag;
+            swop = op;
+            swvj = vj;
+            swvk = vk;
+            swqj = qj;
+            swqk = qk;
+            swa = a;
+        end
+    end
 end
 endmodule
