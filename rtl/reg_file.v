@@ -23,7 +23,7 @@ always@ (negedge clk)
             end
             end
         else begin
-            if (we3 == 1'b1 && wqe == 1'b0) begin
+            if (we3 == 1'b1 && wqe == 1'b0 || we3 == 1'b1 && wqe == 1'b1) begin
                 mem[a3] <= wd3; 
                 qi[a3] <= 4'b0000; end
             else if (we3 == 1'b0 && wqe == 1'b1) begin

@@ -1,6 +1,6 @@
-module sb(clk,a,out,tg,qk,vk,swa,dta,di,ready,cdb,s);
-input clk,di,s;
-input [3:0]tg,qk;
+module sb(clk,a,out,tg,qk,vk,swa,dta,di,ready,cdb,tgc);
+input clk,di;
+input [3:0]tg,qk,tgc;
 input [31:0]vk,a;
 input [35:0]cdb;
 output reg ready;
@@ -43,6 +43,9 @@ begin
             swa <= address[i];
             if (di == 1'b1) begin
                 dta <= data[i];
+            end
+            if (tgc == tag[i]) begin
+                out <= {address[i],data[i]};
             end
         end
     end

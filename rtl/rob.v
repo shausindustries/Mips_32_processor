@@ -1,10 +1,10 @@
-module rob(dr,cdb,clk,empty,rst,rn,commit,out,full,sw,swo);
+module rob(dr,cdb,clk,empty,rst,rn,commit,out,full,sw,tg,w);
 input clk,rst,sw;
 input [4:0]dr;
 input [35:0]cdb;
-output reg commit,full,empty,swo;
+output reg commit,full,empty,w;
 output reg [36:0]out;
-output reg [3:0]rn;
+output reg [3:0]rn,tg;
 
 reg [3:0] tag [0:15];
 reg [31:0] rec_path [0:15];
@@ -67,9 +67,15 @@ begin
 
         if (commit == 1'b1) begin
             out <= {dr[op_ptr],value[op_ptr]};
-            swo <= s[op_ptr];
             op_ptr <= op_ptr + 1'b1;
-
+            if (s[op_ptr] == 1'b1) begin
+                tg <= tag[op_ptr];
+                op_ptr <= op_ptr + 1'b1;
+            end
+            else begin
+                out <= {dr[op_ptr],value[op_ptr]};
+                op_ptr <= op_ptr + 1'b1;
+            end
             if (op_ptr == 3'b111) begin
                 ip_ptr <= 3'b000;
                 op_ptr <= 3'b000;
