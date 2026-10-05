@@ -1,22 +1,31 @@
-module bu(in1,in2,flag,cdb,imm,tag,pc_addr,taken);
-input taken;
-input [31:0]in1,in2,imm,pc_addr;
+module bu(in1,in2,cdb,imm,tag,brsig,op);
+input [31:0]in1,in2,imm;
+input [5:0]op;
 input [3:0]tag;
-output [35:0]cdb;
-output reg flag;
+output reg [35:0]cdb;
+output reg brsig;
 
-wire out,eximm,addr;
-
-assign out = in1 - in2;
-assign addr = taken ? pc_addr + imm : pc_addr;
-assign cdb = {tag, addr};
-
-always @(*) begin
-    if (out == 8'h00000000) begin
-        flag <= 1'b1;
+always@ (*) begin
+    if (in1 == in2) begin
+        if (op == 6'b000100) begin
+            brsig <= 1'b1;
+            cdb <= {tag,imm};
+        end
+        else begin
+            brsig <= 1'b0;
+            cdb <= {tag,imm};
+        end
     end
     else begin
-        flag <= 1'b0;
+        if (op == 6'b000100) begin
+            brsig <= 1'b0;
+            cdb <= {tag,imm};
+        end
+        else begin
+            brsig <= 1'b1;
+            cdb <= {tag,imm};
+        end
     end
+    
 end
 endmodule

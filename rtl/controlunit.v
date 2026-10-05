@@ -1,7 +1,7 @@
-module controlunit (op,func,dr,wq,adr,subr,mulr,divr,beq,bne,ld,sw,adi);
+module controlunit (op,func,dr,wq,adr,subr,mulr,divr,ld,sw,adi,beq,bne);
 input [5:0]op;
 input [5:0]func;
-output reg dr,wq,adr,subr,mulr,divr,beq,bne,ld,sw,adi;
+output reg dr,wq,adr,subr,mulr,divr,ld,sw,adi,beq,bne;
 
 always@(*)
 begin

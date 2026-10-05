@@ -1,4 +1,4 @@
-module reservation_station(clk,op,rd1,rd2,q1,q2,cdb,a,opa,opb,rn,tag,ready,qko,vko);
+module reservation_station(clk,op,opc,rd1,rd2,q1,q2,cdb,a,opa,opb,rn,tag,ready,qko,vko,addro);
 input [5:0]op;
 input [31:0]rd1,rd2;
 input [3:0]q1,q2,rn;
@@ -7,8 +7,8 @@ input [35:0]cdb;
 input clk;
 output reg ready;
 output reg [3:0]qko;
-output reg [31:0]vko;
-output reg [31:0]opa,opb;
+output reg [31:0]vko,addro;
+output reg [31:0]opa,opb,opc;
 output reg [4:0]tag;
 
 reg [3:0] num [0:8];
@@ -67,7 +67,7 @@ always @(posedge clk) begin
                 ready <= 1'b0;
             end
             end
-        else if (opr[i] == 6'b101011 || opr[i] == 6'b000100 || opr[i] == 6'b000101) begin
+        else if (opr[i] == 6'b101011) begin
             if (wtj[i] == 1'b0 && wtk[i] == 1'b0) begin
                 opa <= vj[i];
                 opb <= addr[i];
@@ -81,6 +81,19 @@ always @(posedge clk) begin
                 opb <= addr[i];
                 tag <= num[i];
                 qko <= qk[i];
+                ready <= 1'b1;
+            end
+            else begin
+                ready <= 1'b0;
+            end
+        end
+        else if (opr[i] == 6'b000100 || opr[i] == 6'b000101) begin
+            if (wtj[i] == 1'b0 && wtk[i] == 1'b0) begin
+                opa <= vj[i];
+                opb <= vk[i];
+                tag <= num[i];
+                addro <= addr[i];
+                opc <= opr[i];
                 ready <= 1'b1;
             end
             else begin

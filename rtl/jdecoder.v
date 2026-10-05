@@ -3,7 +3,7 @@ input [5:0]op;
 input [25:0]label;
 input [3:0]addr;
 output reg j;
-output reg jtg;
+output reg [31:0]jtg;
 
 always@ (op) begin
 if (op == 6'b000010) begin
