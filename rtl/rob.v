@@ -1,10 +1,10 @@
-module rob(dr,cdb,clk,empty,rst,rn,commit,out,full,tg,w,rec_adr,op,ins_adr,br_adr,brn);
+module rob(dr,cdb,clk,empty,rst,rn,commit,out,full,tg,w,rec_adr,op,ins_adr,br_adr,brn,mi);
 input clk,rst,brn;
 input [5:0]op;
 input [4:0]dr;
 input [31:0]rec_adr;
 input [35:0]cdb;
-output reg commit,full,empty,w;
+output reg commit,full,empty,w,mi;
 output reg [36:0]out;
 output reg [3:0]rn,tg;
 output reg [31:0]ins_adr,br_adr;
@@ -80,6 +80,7 @@ begin
             else if (opc[op_ptr] == 6'b000100 || opc[op_ptr] == 6'b000101) begin
                 ins_adr <= rec_path[op_ptr];
                 br_adr <= value[op_ptr];
+                mi <= m[op_ptr];
                 w <= 1'b0;
                 op_ptr <= op_ptr + 1'b1;
             end 
