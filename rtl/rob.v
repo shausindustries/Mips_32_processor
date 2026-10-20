@@ -1,5 +1,5 @@
-module rob(dr,cdb,clk,empty,rst,rn,commit,out,full,tg,w,rec_adr,op,ins_adr,br_adr,brn,mi);
-input clk,rst,brn;
+module rob(dr,cdb,clk,empty,rst,rn,commit,out,full,tg,w,rec_adr,op,ins_adr,br_adr,brn,mi,clr);
+input clk,rst,brn,clr;
 input [5:0]op;
 input [4:0]dr;
 input [31:0]rec_adr;
@@ -25,13 +25,17 @@ integer i,j;
 
 always@ (posedge clk)
 begin
-    if (rst) begin
+    if (rst || clr) begin
         ip_ptr <= 4'b000;
         op_ptr <= 4'b000;
         for (i = 0; i<16 ; i = i+1) begin
+            opc[i] <= 6'b000000;
             tag[i] <= 4'b0000;
+            rec_path[i] <= 32'b0;
             rd[i] <= 5'b00000;
             value[i] <= 32'b0;
+            m[i] <= 1'b0;
+            ready[i] <= 1'b0;
         end
     end
     else begin
@@ -96,6 +100,12 @@ begin
             end
             else begin
                 empty <= 1'b0;
+            end
+
+            if (clr == 1'b1) begin
+                for (i=0; i<16; i=i+1) begin
+                    
+                end
             end
         end
     end

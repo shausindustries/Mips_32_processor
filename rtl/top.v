@@ -1,8 +1,10 @@
 `timescale 1ns / 1ps
 
-module top(of,clk,rst);
+module top(clk,rst,mem_addr,mem_data,mem_w,cm,mem_rd);
+input [31:0]mem_rd;
 input clk,rst;
-output of;
+output cm,mem_w;
+output [31:0]mem_addr,mem_data;
 
 wire dr,wq,mulr,adr,subr,divr,ld,sw,beq,bne,j,br,adi,commit,rdya,emp,full,rdyl,rdylb,di,rdys,
 rdysb,memw,bnch,pred,rdyb,brn,btnt,mispredict;
@@ -13,7 +15,7 @@ wire [5:0] aop,bop,ldop,swop,mop,dop,sop,brop;
 wire [31:0] bmo,smo,jmo,pc_op,instr,nia,ins,addr,vj,vk,imm,br_addr,avj,avk,aa,bvj,bvk,ba,ldvj,
 ldvk,lda,swvj,swvk,swa,mvj,mvk,ma,dvj,dvk,da,svj,svk,sa,adopa,adopb,ldopa,ldopb,mem_addr_ld,
 jlabel,swopa,swopb,mem_addr_sw,vkrs,vksb,lsab,lsdb,dtmem,adrmem,bdaddr,bta,cbtg,intg,bopa,bopb,
-btadr,rec_path;
+btadr,rec_path,cache_addr;
 wire [35:0] cdb;
 wire [36:0] rob_out;
 wire [63:0] in_pkg,mem_pkg;
@@ -22,7 +24,7 @@ assign ins = in_pkg[31:0];
 assign addr = in_pkg[63:32];
 assign br = beq | bne;
 
-prog_counter pc (.pci(bmo),.pco(pc_op),.clk(clk),.stl(full & ~(emp)),.rst(rst));
+prog_counter pc (.pci(bmo),.pco(pc_op),.clk(clk),.stl(full & ~(emp) | mispredict),.rst(rst));
 pc_adder pa (.in(pc_op),.op(nia));
 mux_32 step_mux (.a(nia),.b(bta),.sel(pred),.o(smo));
 mux_32 jump_mux (.a(smo),.b(jlabel),.sel(j),.o(jmo));
@@ -87,5 +89,14 @@ bht bb (.mis_ind(intg[31:28]),.mis_ver(intg[27:0]),.bta(instr[15:0 << 2]),.br(bn
 reservation_station r4 (.rn(btag),.op(bop),.q1(bqj),.q2(bqk),.rd1(bvj),.rd2(bvk),.clk(clk),
 .a(ba),.tag(butag),.opa(bopa),.opb(bopb),.cdb(cdb),.ready(rdyb),.addro(btadr),.opc(brop));
 bu bru (.in1(bopa),.in2(bopb),.imm(btadr),.cdb(cdb),.tag(butag),.brsig(brn),.op(brop));
+
+//Data Memory Cache
+dm_cache dm1 (.addr(cache_addr),.addr_m(mem_addr),.rd(dtmem),.wd(mem_pkg[31:0]),.rst(rst)
+,.mrd(mem_rd),.mwd(mem_data),.clk(clk),.w(memw),.m(cm),.wr(mem_w));
+mux_32 addr_mux (.a(adrmem),.b(mem_pkg[63:32]),.sel(memw),.o(cache_addr));
+
+/*
+dirty retirement if the cache is idle
+*/
 
 endmodule

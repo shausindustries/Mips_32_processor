@@ -1,0 +1,8 @@
+create_clock -name CLK -period 10 -waveform {0 5} [get_ports CLK]
+set_clock_uncertainty 0.25 [get_clocks CLK]
+set_clock_transition 0.1 [get_clocks CLK]
+set_input_delay -clock [CLK] 2 [get_ports mem_rd]
+set_output_delay -clock [CLK] 2 [get_ports mem_addr]
+set_output_delay -clock [CLK] 2 [get_ports mem_data]
+set_output_delay -clock [CLK] 2 [get_ports mem_w]
+set_false_path -from [get_ports rst]
