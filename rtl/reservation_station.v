@@ -68,7 +68,7 @@ end
                 wtj[i] <= 1'b1;
                 end
             
-            if (opr[i] == 6'b000000) begin
+            if (opr[i] == 6'b000000 || opr[i] == 6'b000010 || opr[i] == 6'b100000 || opr[i] == 6'b100010) begin
                 if (wtj[i] == 1'b0 && wtk[i] == 1'b0) begin
                     opa <= vj[i];
                     opb <= vk[i];

@@ -7,15 +7,16 @@ output cm,mem_w;
 output [31:0]mem_addr,mem_data;
 
 wire dr,wq,mulr,adr,subr,divr,ld,sw,beq,bne,j,br,adi,commit,rdya,emp,full,rdyl,rdylb,di,rdys,
-rdysb,memw,bnch,pred,rdyb,brn,btnt,mispredict;
-wire [3:0] tag_rob,qj,qk,aqj,aqk,atag,bqj,bqk,btag,ldqj,ldqk,ldtag,swqk,swqj,swtag,mtag,mqj,mqk,dtag,
-dqj,dqk,stag,sqj,sqk,autag,lutag,lbtag,sbtag,sutag,qkrs,qksb,swtg,butag;
-wire [4:0] ds_reg,com_reg;
-wire [5:0] aop,bop,ldop,swop,mop,dop,sop,brop;
+rdysb,memw,bnch,pred,rdyb,brn,btnt,mispredict,pack,pab,pah,psb,psh,rdypa,rdyps;
+wire [3:0] tag_rob,qj,qk,aqj,aqk,atag,bqj,bqk,btag,ldqj,ldqk,ldtag,swqk,swqj,swtag,mtag,mqj,mqk,
+dtag,dqj,dqk,stag,sqj,sqk,autag,lutag,lbtag,sbtag,sutag,qkrs,qksb,swtg,butag,pstag,patag,paqj,
+paqk,psqj,psqk,padtag;
+wire [4:0] ds_reg,fd_reg;
+wire [5:0] aop,bop,ldop,swop,mop,dop,sop,brop,paop,psop;
 wire [31:0] bmo,smo,jmo,pc_op,instr,nia,ins,addr,vj,vk,imm,br_addr,avj,avk,aa,bvj,bvk,ba,ldvj,
 ldvk,lda,swvj,swvk,swa,mvj,mvk,ma,dvj,dvk,da,svj,svk,sa,adopa,adopb,ldopa,ldopb,mem_addr_ld,
 jlabel,swopa,swopb,mem_addr_sw,vkrs,vksb,lsab,lsdb,dtmem,adrmem,bdaddr,bta,cbtg,intg,bopa,bopb,
-btadr,rec_path,cache_addr;
+btadr,rec_path,cache_addr,pack_r1,pack_r2,pavj,pavk,psvj,psvk,paopa,paopb,psopa,psopb;
 wire [35:0] cdb;
 wire [36:0] rob_out;
 wire [63:0] in_pkg,mem_pkg;
@@ -23,6 +24,7 @@ wire [63:0] in_pkg,mem_pkg;
 assign ins = in_pkg[31:0];
 assign addr = in_pkg[63:32];
 assign br = beq | bne;
+assign pack = pab | pah | psb | psh;
 
 prog_counter pc (.pci(bmo),.pco(pc_op),.clk(clk),.stl(full & ~(emp) | mispredict),.rst(rst));
 pc_adder pa (.in(pc_op),.op(nia));
@@ -33,14 +35,16 @@ mux_32 branch_mux (.a(jmo),.b(rec_path),.sel(mispredict),.o(bmo));
 ins_mem im (.a(pc_op),.rd(instr));
 intruction_queue iq (.in({pc_op,instr}),.out(in_pkg),.clk(clk),.rst(rst),.ready(),.empty());
 
-reg_file rf (.a1(ins[25:21]),.a2(ins[20:16]),.a3(ds_reg),.rd1(vj),.rd2(vk),.wd3(rob_out[31:0]),
+p_mux sr1 (.a(ins[25:21]),.b(ins[24:20]),.sel(pack),.o(pack_r1));
+p_mux sr2 (.a(ins[20:16]),.b(ins[19:15]),.sel(pack),.o(pack_r2));
+reg_file rf (.a1(pack_r1),.a2(pack_r2),.a3(rob_out[36:32]),.rd1(vj),.rd2(vk),.wd3(rob_out[31:0]),
 .wq3(tag_rob),.q1(qj),.q2(qk),.clk(clk),.we3(commit),.wqe((wq & (~(full)))),.rst(rst));
-p_mux dest_reg (.a(ins[20:16]),.b(ins[15:11]),.sel(dr),.o(ds_reg));
-p_mux cm_reg (.a(ds_reg),.b(rob_out[36:32]),.o(com_reg),.sel(commit));
 
 sign_extend se1 (.in(ins[15:0]),.out(imm));
 
-rob r (.dr(ds_reg),.rn(tag_rob),.rst(rst),.clk(clk),.out(rob_out),.cdb(cdb),.commit(commit),
+p_mux dest_reg (.a(ins[20:16]),.b(ins[15:11]),.sel(dr),.o(ds_reg));
+p_mux pk_reg (.a(ds_reg),.b(ins[11:7]),.o(fd_reg),.sel(pack));
+rob r (.dr(fd_reg),.rn(tag_rob),.rst(rst),.clk(clk),.out(rob_out),.cdb(cdb),.commit(commit),
 .empty(emp),.full(full),.w(memw),.tg(swtg),.op(ins[31:26]),.ins_adr(intg),.br_adr(cbtg),
 .rec_adr(br_addr),.brn(brn),.mi(btnt));
 
@@ -76,6 +80,10 @@ addr_unit_sw au2 (.a(swopa),.b(swopb),.tg(sutag),.tgo(sbtag),.qk(qkrs),.vk(vkrs)
 sb buffer2 (clk(clk),a(mem_addr_sw),out(mem_pkg),tg(sbtag),qk(qksb),vk(vksb),swa(lsab),dta(lsdb),
 di(di),ready(rdysb),cdb(cdb),tgc(swtg));
 
+//Data Memory Cache
+dm_cache dm1 (.addr(cache_addr),.addr_m(mem_addr),.rd(dtmem),.wd(mem_pkg[31:0]),.rst(rst)
+,.mrd(mem_rd),.mwd(mem_data),.clk(clk),.w(memw),.m(cm),.wr(mem_w));
+mux_32 addr_mux (.a(adrmem),.b(mem_pkg[63:32]),.sel(memw),.o(cache_addr));
 
 //Jump
 jdecoder jd (.op(instr[31:26]),.j(j),.label(instr[25:0]),.jtg(jlabel),.addr(nia[31:28]));
@@ -90,13 +98,17 @@ reservation_station r4 (.rn(btag),.op(bop),.q1(bqj),.q2(bqk),.rd1(bvj),.rd2(bvk)
 .a(ba),.tag(butag),.opa(bopa),.opb(bopb),.cdb(cdb),.ready(rdyb),.addro(btadr),.opc(brop));
 bu bru (.in1(bopa),.in2(bopb),.imm(btadr),.cdb(cdb),.tag(butag),.brsig(brn),.op(brop));
 
-//Data Memory Cache
-dm_cache dm1 (.addr(cache_addr),.addr_m(mem_addr),.rd(dtmem),.wd(mem_pkg[31:0]),.rst(rst)
-,.mrd(mem_rd),.mwd(mem_data),.clk(clk),.w(memw),.m(cm),.wr(mem_w));
-mux_32 addr_mux (.a(adrmem),.b(mem_pkg[63:32]),.sel(memw),.o(cache_addr));
-
 /*
 dirty retirement if the cache is idle
 */
 
+//DLP
+simd_decoder dc1 (.op(ins[30:25]),.pab(pab),.pah(pah),.psb(psb),.psh(psh));
+simd_issue si1 (.pab(pab),.psh(psh),.psb(psb),.pah(pah),.vj(vj),.vk(vk),.qj(qj),.qk(qk),
+.pavj(pavj),.pavk(pavk),.paqk(paqk),.paqj(paqj),.tag(tag_rob),.op(ins[30:25]),.paop(paop),
+.psop(psop),.patag(patag),.pstag(pstag),.psvj(psvj),.psvk(psvk),.psqj(psqj),.psqk(psqk),
+.rdypa(rdypa),.rdyps(rsyps));
+reservation_station r5 (.clk(clk),.op(paop),.q1(paqj),.q2(paqk),.rd1(pavj),.rd2(pavk),.opa(paopa),
+.opb(paopb),.rn(patag),.cdb(cdb),.rdy(rdypa),.tag(padtag));
+addb dlpa (.tg(padtag),.opa(paopa),.opb(paopb),.cdb(cdb));
 endmodule
