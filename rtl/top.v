@@ -7,16 +7,17 @@ output cm,mem_w;
 output [31:0]mem_addr,mem_data;
 
 wire dr,wq,mulr,adr,subr,divr,ld,sw,beq,bne,j,br,adi,commit,rdya,emp,full,rdyl,rdylb,di,rdys,
-rdysb,memw,bnch,pred,rdyb,brn,btnt,mispredict,pack,pab,pah,psb,psh,rdypa,rdyps;
+rdysb,memw,bnch,pred,rdyb,brn,btnt,mispredict,pack,pab,pah,psb,psh,rdypa,rdyps,adb,adh,sbh,sbb;
 wire [3:0] tag_rob,qj,qk,aqj,aqk,atag,bqj,bqk,btag,ldqj,ldqk,ldtag,swqk,swqj,swtag,mtag,mqj,mqk,
 dtag,dqj,dqk,stag,sqj,sqk,autag,lutag,lbtag,sbtag,sutag,qkrs,qksb,swtg,butag,pstag,patag,paqj,
-paqk,psqj,psqk,padtag;
+paqk,psqj,psqk,padtag,psbtag,sbb_tag,sbh_tag,adb_tag,adh_tag;
 wire [4:0] ds_reg,fd_reg;
-wire [5:0] aop,bop,ldop,swop,mop,dop,sop,brop,paop,psop;
+wire [5:0] aop,bop,ldop,swop,mop,dop,sop,brop,paop,psop,r5op,r6op;
 wire [31:0] bmo,smo,jmo,pc_op,instr,nia,ins,addr,vj,vk,imm,br_addr,avj,avk,aa,bvj,bvk,ba,ldvj,
 ldvk,lda,swvj,swvk,swa,mvj,mvk,ma,dvj,dvk,da,svj,svk,sa,adopa,adopb,ldopa,ldopb,mem_addr_ld,
 jlabel,swopa,swopb,mem_addr_sw,vkrs,vksb,lsab,lsdb,dtmem,adrmem,bdaddr,bta,cbtg,intg,bopa,bopb,
-btadr,rec_path,cache_addr,pack_r1,pack_r2,pavj,pavk,psvj,psvk,paopa,paopb,psopa,psopb;
+btadr,rec_path,cache_addr,pack_r1,pack_r2,pavj,pavk,psvj,psvk,paopa,paopb,psopa,psopb,paba,paha,
+pabb,pahb,psba,psha,psbb,pshb;
 wire [35:0] cdb;
 wire [36:0] rob_out;
 wire [63:0] in_pkg,mem_pkg;
@@ -103,12 +104,27 @@ dirty retirement if the cache is idle
 */
 
 //DLP
-simd_decoder dc1 (.op(ins[30:25]),.pab(pab),.pah(pah),.psb(psb),.psh(psh));
+simd_decoder sdc1 (.op(ins[30:25]),.pab(pab),.pah(pah),.psb(psb),.psh(psh));
 simd_issue si1 (.pab(pab),.psh(psh),.psb(psb),.pah(pah),.vj(vj),.vk(vk),.qj(qj),.qk(qk),
 .pavj(pavj),.pavk(pavk),.paqk(paqk),.paqj(paqj),.tag(tag_rob),.op(ins[30:25]),.paop(paop),
 .psop(psop),.patag(patag),.pstag(pstag),.psvj(psvj),.psvk(psvk),.psqj(psqj),.psqk(psqk),
 .rdypa(rdypa),.rdyps(rsyps));
+
 reservation_station r5 (.clk(clk),.op(paop),.q1(paqj),.q2(paqk),.rd1(pavj),.rd2(pavk),.opa(paopa),
-.opb(paopb),.rn(patag),.cdb(cdb),.rdy(rdypa),.tag(padtag));
-addb dlpa (.tg(padtag),.opa(paopa),.opb(paopb),.cdb(cdb));
+.opb(paopb),.rn(patag),.cdb(cdb),.rdy(rdypa),.tag(padtag),.opc(r5op));
+packed_logic pl (.op(r5op),.pah(adh));
+dmux_32 d1 (.in(paopa),.a(paba),.b(paha),.sel(adh));
+dmux_32 d2 (.in(paopb),.a(pabb),.b(pahb),.sel(adh));
+f_dmux fdm1 (.sel(adh),.a(adb_tag),.b(adh_tag),.in(padtag));
+addb dlpab (.tg(adb_tag),.opa(pba),.opb(pbb),.cdb(cdb));
+addh dlpah (.opa(pha),.opb(phb),.cdb(cdb),.tg(adh_tag));
+
+reservation_station r6 (.clk(clk),.op(psop),.rd1(psvj),.rd2(psvk),.q1(psqj),.q2(psqk),.opa(psopa),
+.opb(psopb),.rn(pstag),.cdb(cdb),.rdy(rdyps),.tag(psbtag),.opc(r6op));
+packed_logic p2 (.op(r6op),.psh(sbh));
+dmux_32 d3 (.in(psopa),.a(psba),.b(psha),.sel(sbh));
+dmux_32 d4 (.in(psopb),.a(psbb),.b(pshb),.sel(sbh));
+f_dmux fdm2 (.sel(sbh),.a(sbb_tag),.b(sbh_tag),.in(psbtag));
+subb dlpsb (.tg(sbb_tag),.opa(psba),.opb(psbb),.cdb(cdb));
+subh dlpsh (.tg(sbh_tag),.opa(psha),.opb(pshb),.cdb(cdb));
 endmodule

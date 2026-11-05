@@ -4,12 +4,5 @@ module mux_32(a,b,sel,o);
     input sel;
     output reg [31:0]o;
     
-    always@ (*)
-        begin
-            case (sel)
-                0 : o = a;
-                1 : o = b;
-                default : o = a;
-            endcase
-        end
+    assign o = sel ? a : b;
 endmodule           

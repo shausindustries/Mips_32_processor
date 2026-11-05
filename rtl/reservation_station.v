@@ -74,6 +74,7 @@ end
                     opb <= vk[i];
                     tag <= num[i];
                     ready <= 1'b1;
+                    opc <= opr[i];
                 end
                 else begin
                     ready <= 1'b0;
